@@ -90,6 +90,9 @@ config() {
 		echo '{"search":{"type":"azure","queries":[{"bucket":"'$bucket'","prefix":"unique/raw/","endDate":"'$endDate'","delta":0}]},"model":"org.ekstep.analytics.model.WorkflowSummary","modelParams":{"apiVersion":"v2", "parallelization":200},"output":[{"to":"kafka","params":{"brokerList":"'$brokerList'","topic":"'$topic'"} }],"parallelization":200,"appName":"Workflow Summarizer","deviceMapping":true}'
 		#echo '{"search":{"type":"azure","queries":[{"bucket":"'$bucket'","prefix":"unique/","endDate":"'$endDate'","delta":0}]},"model":"org.ekstep.analytics.model.WorkflowSummary","modelParams":{"apiVersion":"v2"},"output":[{"to":"console","params":{"printEvent": false}},{"to":"kafka","params":{"brokerList":"'$brokerList'","topic":"'$topic'"}}],"parallelization":8,"appName":"Workflow Summarizer","deviceMapping":true}'
 	   	;;
+	   	"competency-gap")
+        echo '{"search":{"type":"none"},"model":"org.ekstep.analytics.dashboard.CompetencyGapJob","modelParams":{"sparkCassandraConnectionHost":"{{ core_cassandra_host }}","keyspace":"sunbird","cassandraDataTable":"user"},"output":[{"to":"kafka","params":{"brokerList":"'$brokerList'","topic":"{{ dashboards_competency_gap_topic }}"}}],"parallelization":10,"appName":"Competency Gap","deviceMapping":false}'
+        ;;
 		"video-streaming")
 		echo '{"search":{"type":"azure"},"model":"org.ekstep.analytics.job.VideoStreamingJob","modelParams":{"maxIterations":10},"output":[{"to":"console","params":{"printEvent":false}}],"parallelization":8,"appName":"Video Streaming Job","deviceMapping":false}'
 	   	;;

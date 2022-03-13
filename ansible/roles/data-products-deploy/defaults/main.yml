@@ -15,6 +15,9 @@ analytics_metrics_topic: "{{ env }}.analytics_metrics"
 sink_topic: "{{ env }}.telemetry.sink"
 assess_topic: "{{ env }}.telemetry.assess"
 metrics_topic: "{{ env }}.telemetry.metrics"
+
+dashboards_competency_gap_topic: "{{ env }}.dashboards.competency.gap"
+
 job_manager_tmp_dir: "transient-data"
 channel: dev-test
 druid_broker_host: "{{groups['raw-broker'][0]}}"
@@ -31,7 +34,7 @@ report_user_table_keyspace: "sunbird_courses"
 report_user_enrolment_table: "report_user_enrolments"
 
 #analytics_job_list: '"wfs", "content-rating-updater", "monitor-job-summ"'
-analytics_job_list: '"wfs", "monitor-job-summ"'
+analytics_job_list: '"wfs", "monitor-job-summ", "competency-gap"'
 analytics_jobs_count: 3
 
 cassandra_keyspace_prefix: '{{ env }}_'
