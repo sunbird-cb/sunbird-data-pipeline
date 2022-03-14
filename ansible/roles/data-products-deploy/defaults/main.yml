@@ -17,6 +17,7 @@ assess_topic: "{{ env }}.telemetry.assess"
 metrics_topic: "{{ env }}.telemetry.metrics"
 
 dashboards_competency_gap_topic: "{{ env }}.dashboards.competency.gap"
+dashboards_user_progress_topic: "{{ env }}.dashboards.user.course.progress"
 
 job_manager_tmp_dir: "transient-data"
 channel: dev-test

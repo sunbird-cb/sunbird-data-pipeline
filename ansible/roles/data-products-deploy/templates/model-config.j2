@@ -93,6 +93,9 @@ config() {
 	   	"competency-gap")
         echo '{"search":{"type":"none"},"model":"org.ekstep.analytics.dashboard.CompetencyGapJob","modelParams":{"sparkCassandraConnectionHost":"{{ core_cassandra_host }}","keyspace":"sunbird","cassandraDataTable":"user"},"output":[{"to":"kafka","params":{"brokerList":"'$brokerList'","topic":"{{ dashboards_competency_gap_topic }}"}}],"parallelization":10,"appName":"Competency Gap","deviceMapping":false}'
         ;;
+        "user-course-progress")
+        echo '{"search":{"type":"none"},"model":"org.ekstep.analytics.dashboard.UserCourseProgressJob","modelParams":{"sparkCassandraConnectionHost":"{{ core_cassandra_host }}","keyspace":"sunbird_courses","cassandraDataTable":"user_content_consumption"},"output":[{"to":"kafka","params":{"brokerList":"'$brokerList'","topic":"{{ dashboards_user_progress_topic }}"}}],"parallelization":10,"appName":"User Course Progress","deviceMapping":false}'
+        ;;
 		"video-streaming")
 		echo '{"search":{"type":"azure"},"model":"org.ekstep.analytics.job.VideoStreamingJob","modelParams":{"maxIterations":10},"output":[{"to":"console","params":{"printEvent":false}}],"parallelization":8,"appName":"Video Streaming Job","deviceMapping":false}'
 	   	;;
