@@ -1,0 +1,84 @@
+{
+  "type": "kafka",
+  "dataSchema": {
+    "dataSource": "dashboards_user_progress",
+    "parser": {
+      "type": "string",
+      "parseSpec": {
+        "format": "json",
+        "flattenSpec": {
+          "useFieldDiscovery": false,
+          "fields": [
+            {
+              "type": "root",
+              "name": "user_id",
+              "expr": "$.userid"
+            },
+            {
+              "type": "root",
+              "name": "course_id",
+              "expr": "$.courseid"
+            },
+            {
+              "type": "root",
+              "name": "date",
+              "expr": "$.date"
+            },
+            {
+              "type": "root",
+              "name": "completion_percentage",
+              "expr": "$.percentage"
+            }
+          ]
+        },
+        "dimensionsSpec": {
+          "dimensions": [
+            {
+              "type": "string",
+              "name": "user_id"
+            },
+            {
+              "type": "string",
+              "name": "course_id"
+            },
+            {
+              "type": "long",
+              "name": "date"
+            },
+            {
+              "type": "string",
+              "name": "completion_percentage"
+            }
+          ],
+          "dimensionsExclusions": []
+        },
+        "timestampSpec": {
+          "column": "timestamp",
+          "format": "auto"
+        }
+      }
+    },
+    "metricsSpec": [],
+    "granularitySpec": {
+      "type": "uniform",
+      "segmentGranularity": "day",
+      "rollup": false
+    }
+  },
+  "ioConfig": {
+    "topic": "{{ env }}.dashboards.user.course.progress",
+    "consumerProperties": {
+      "bootstrap.servers": "{{kafka_brokers}}"
+    },
+    "taskCount": "{{raw_user_course_progress_taskcount}}",
+    "replicas": 1,
+    "taskDuration": "PT7200S",
+    "useEarliestOffset": true,
+    "completionTimeout" : "PT7200S"
+  },
+  "tuningConfig": {
+    "type": "kafka",
+    "reportParseExceptions": false,
+    "maxRowsPerSegment": "2000000"
+  }
+}
