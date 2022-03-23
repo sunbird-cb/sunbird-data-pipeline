@@ -1,7 +1,7 @@
 {
   "type": "kafka",
   "dataSchema": {
-    "dataSource": "dashboards_user_progress",
+    "dataSource": "dashboards-user-course-progress",
     "parser": {
       "type": "string",
       "parseSpec": {
