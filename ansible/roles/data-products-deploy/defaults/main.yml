@@ -16,15 +16,23 @@ sink_topic: "{{ env }}.telemetry.sink"
 assess_topic: "{{ env }}.telemetry.assess"
 metrics_topic: "{{ env }}.telemetry.metrics"
 
+dashboards_user_progress_topic: "{{ env }}.dashboards.user.course.progress"
+dashboards_frac_competency_topic: "{{ env }}.dashboards.competency.frac"
+dashboards_course_competency_topic: "{{ env }}.dashboards.competency.course"
 dashboards_expected_competency_topic: "{{ env }}.dashboards.competency.expected"
 dashboards_declared_competency_topic: "{{ env }}.dashboards.competency.declared"
-dashboards_course_competency_topic: "{{ env }}.dashboards.competency.course"
 dashboards_competency_gap_topic: "{{ env }}.dashboards.competency.gap"
-dashboards_user_progress_topic: "{{ env }}.dashboards.user.course.progress"
+dashboards_course_rating_summary_topic: "{{ env }}.dashboards.course.rating.summary"
+dashboards_cassandra_user_table: "user"
+dashboards_cassandra_user_content_consumption_table: "user_content_consumption"
+dashboards_cassandra_content_hierarchy_table: "content_hierarchy"
+dashboards_frac_backend_host: "frac-dictionary-backend.igot-stage.in"
+
 
 job_manager_tmp_dir: "transient-data"
 channel: dev-test
 druid_broker_host: "{{groups['raw-broker'][0]}}"
+druid_router_host: "{{groups['raw-router'][0]}}"
 druid_rollup_broker_host: "{{groups['raw-broker'][0]}}"
 hierarchySearchServiceUrl: "{{ proto }}://{{ domain_name }}/action/content"
 hierarchySearchServicEndpoint: /v3/hierarchy/
