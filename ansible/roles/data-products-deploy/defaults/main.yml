@@ -16,6 +16,9 @@ sink_topic: "{{ env }}.telemetry.sink"
 assess_topic: "{{ env }}.telemetry.assess"
 metrics_topic: "{{ env }}.telemetry.metrics"
 
+dashboards_expected_competency_topic: "{{ env }}.dashboards.competency.expected"
+dashboards_declared_competency_topic: "{{ env }}.dashboards.competency.declared"
+dashboards_course_competency_topic: "{{ env }}.dashboards.competency.course"
 dashboards_competency_gap_topic: "{{ env }}.dashboards.competency.gap"
 dashboards_user_progress_topic: "{{ env }}.dashboards.user.course.progress"
 
