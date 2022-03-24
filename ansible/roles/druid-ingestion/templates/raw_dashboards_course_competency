@@ -1,7 +1,7 @@
 {
   "type": "kafka",
   "dataSchema": {
-    "dataSource": "dashboards-user-course-progress",
+    "dataSource": "dashboards-course-competency",
     "parser": {
       "type": "string",
       "parseSpec": {
@@ -11,23 +11,28 @@
           "fields": [
             {
               "type": "root",
-              "name": "userId",
-              "expr": "$.completionUserID"
-            },
-            {
-              "type": "root",
               "name": "courseId",
-              "expr": "$.completionCourseID"
+              "expr": "$.courseID"
             },
             {
               "type": "root",
-              "name": "completionPercentage",
-              "expr": "$.completionPercentage"
+              "name": "courseStatus",
+              "expr": "$.courseStatus"
             },
             {
               "type": "root",
-              "name": "completionStatus",
-              "expr": "$.completionStatus"
+              "name": "courseChannel",
+              "expr": "$.courseChannel"
+            },
+            {
+              "type": "root",
+              "name": "courseCompetencyId",
+              "expr": "$.courseCompetencyID"
+            },
+            {
+              "type": "root",
+              "name": "courseCompetencyLevel",
+              "expr": "$.courseCompetencyLevel"
             }
           ]
         },
@@ -35,19 +40,23 @@
           "dimensions": [
             {
               "type": "string",
-              "name": "userId"
-            },
-            {
-              "type": "string",
               "name": "courseId"
             },
             {
               "type": "string",
-              "name": "completionPercentage"
+              "name": "courseStatus"
             },
             {
               "type": "string",
-              "name": "completionStatus"
+              "name": "courseChannel"
+            },
+            {
+              "type": "string",
+              "name": "courseCompetencyId"
+            },
+            {
+              "type": "string",
+              "name": "courseCompetencyLevel"
             }
           ],
           "dimensionsExclusions": []
@@ -66,11 +75,11 @@
     }
   },
   "ioConfig": {
-    "topic": "{{ env }}.dashboards.user.course.progress",
+    "topic": "{{ env }}.dashboards.competency.course",
     "consumerProperties": {
       "bootstrap.servers": "{{kafka_brokers}}"
     },
-    "taskCount": "{{raw_dashboards_user_course_progress_taskcount}}",
+    "taskCount": "{{raw_dashboards_course_competency_taskcount}}",
     "replicas": 1,
     "taskDuration": "PT7200S",
     "useEarliestOffset": true,

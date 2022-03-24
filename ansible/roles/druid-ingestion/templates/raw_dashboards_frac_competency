@@ -1,7 +1,7 @@
 {
   "type": "kafka",
   "dataSchema": {
-    "dataSource": "dashboards-user-course-progress",
+    "dataSource": "dashboards-frac-competency",
     "parser": {
       "type": "string",
       "parseSpec": {
@@ -11,23 +11,18 @@
           "fields": [
             {
               "type": "root",
-              "name": "userId",
-              "expr": "$.completionUserID"
+              "name": "fracCompetencyID",
+              "expr": "$.fracCompetencyID"
             },
             {
               "type": "root",
-              "name": "courseId",
-              "expr": "$.completionCourseID"
+              "name": "fracCompetencyName",
+              "expr": "$.fracCompetencyName"
             },
             {
               "type": "root",
-              "name": "completionPercentage",
-              "expr": "$.completionPercentage"
-            },
-            {
-              "type": "root",
-              "name": "completionStatus",
-              "expr": "$.completionStatus"
+              "name": "fracCompetencyStatus",
+              "expr": "$.fracCompetencyStatus"
             }
           ]
         },
@@ -35,19 +30,15 @@
           "dimensions": [
             {
               "type": "string",
-              "name": "userId"
+              "name": "fracCompetencyID"
             },
             {
               "type": "string",
-              "name": "courseId"
+              "name": "fracCompetencyName"
             },
             {
               "type": "string",
               "name": "completionPercentage"
-            },
-            {
-              "type": "string",
-              "name": "completionStatus"
             }
           ],
           "dimensionsExclusions": []
@@ -66,11 +57,11 @@
     }
   },
   "ioConfig": {
-    "topic": "{{ env }}.dashboards.user.course.progress",
+    "topic": "{{ env }}.dashboards.competency.frac",
     "consumerProperties": {
       "bootstrap.servers": "{{kafka_brokers}}"
     },
-    "taskCount": "{{raw_dashboards_user_course_progress_taskcount}}",
+    "taskCount": "{{raw_dashboards_frac_competency_taskcount}}",
     "replicas": 1,
     "taskDuration": "PT7200S",
     "useEarliestOffset": true,

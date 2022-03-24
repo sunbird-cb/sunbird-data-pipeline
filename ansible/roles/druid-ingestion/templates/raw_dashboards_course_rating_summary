@@ -1,7 +1,7 @@
 {
   "type": "kafka",
   "dataSchema": {
-    "dataSource": "dashboards-user-course-progress",
+    "dataSource": "dashboards-course-rating-summary",
     "parser": {
       "type": "string",
       "parseSpec": {
@@ -11,23 +11,13 @@
           "fields": [
             {
               "type": "root",
-              "name": "userId",
-              "expr": "$.completionUserID"
-            },
-            {
-              "type": "root",
               "name": "courseId",
-              "expr": "$.completionCourseID"
+              "expr": "$.courseID"
             },
             {
               "type": "root",
-              "name": "completionPercentage",
-              "expr": "$.completionPercentage"
-            },
-            {
-              "type": "root",
-              "name": "completionStatus",
-              "expr": "$.completionStatus"
+              "name": "ratingSummary",
+              "expr": "$.ratingSummary"
             }
           ]
         },
@@ -35,19 +25,11 @@
           "dimensions": [
             {
               "type": "string",
-              "name": "userId"
-            },
-            {
-              "type": "string",
               "name": "courseId"
             },
             {
               "type": "string",
-              "name": "completionPercentage"
-            },
-            {
-              "type": "string",
-              "name": "completionStatus"
+              "name": "ratingSummary"
             }
           ],
           "dimensionsExclusions": []
@@ -66,11 +48,11 @@
     }
   },
   "ioConfig": {
-    "topic": "{{ env }}.dashboards.user.course.progress",
+    "topic": "{{ env }}.dashboards.course.rating.summary",
     "consumerProperties": {
       "bootstrap.servers": "{{kafka_brokers}}"
     },
-    "taskCount": "{{raw_dashboards_user_course_progress_taskcount}}",
+    "taskCount": "{{raw_dashboards_course_rating_summary_taskcount}}",
     "replicas": 1,
     "taskDuration": "PT7200S",
     "useEarliestOffset": true,

@@ -1,7 +1,7 @@
 {
   "type": "kafka",
   "dataSchema": {
-    "dataSource": "dashboards-user-course-progress",
+    "dataSource": "dashboards-user-competency-gap",
     "parser": {
       "type": "string",
       "parseSpec": {
@@ -12,12 +12,37 @@
             {
               "type": "root",
               "name": "userId",
-              "expr": "$.completionUserID"
+              "expr": "$.userID"
             },
             {
               "type": "root",
-              "name": "courseId",
-              "expr": "$.completionCourseID"
+              "name": "competencyId",
+              "expr": "$.competencyID"
+            },
+            {
+              "type": "root",
+              "name": "orgId",
+              "expr": "$.orgID"
+            },
+            {
+              "type": "root",
+              "name": "workOrderId",
+              "expr": "$.workOrderID"
+            },
+            {
+              "type": "root",
+              "name": "expectedLevel",
+              "expr": "$.expectedLevel"
+            },
+            {
+              "type": "root",
+              "name": "declaredLevel",
+              "expr": "$.declaredLevel"
+            },
+            {
+              "type": "root",
+              "name": "competencyGap",
+              "expr": "$.competencyGap"
             },
             {
               "type": "root",
@@ -39,7 +64,27 @@
             },
             {
               "type": "string",
-              "name": "courseId"
+              "name": "competencyId"
+            },
+            {
+              "type": "string",
+              "name": "orgId"
+            },
+            {
+              "type": "string",
+              "name": "workOrderId"
+            },
+            {
+              "type": "string",
+              "name": "expectedLevel"
+            },
+            {
+              "type": "string",
+              "name": "declaredLevel"
+            },
+            {
+              "type": "string",
+              "name": "competencyGap"
             },
             {
               "type": "string",
@@ -66,11 +111,11 @@
     }
   },
   "ioConfig": {
-    "topic": "{{ env }}.dashboards.user.course.progress",
+    "topic": "{{ env }}.dashboards.competency.gap",
     "consumerProperties": {
       "bootstrap.servers": "{{kafka_brokers}}"
     },
-    "taskCount": "{{raw_dashboards_user_course_progress_taskcount}}",
+    "taskCount": "{{raw_dashboards_user_competency_gap_taskcount}}",
     "replicas": 1,
     "taskDuration": "PT7200S",
     "useEarliestOffset": true,
