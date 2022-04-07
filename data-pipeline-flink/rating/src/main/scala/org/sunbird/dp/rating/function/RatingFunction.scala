@@ -47,13 +47,17 @@ class RatingFunction(config: RatingConfig, @transient var cassandraUtil: Cassand
       val rows: java.util.List[Row] = cassandraUtil.find(query.toString);
       if (null != rows && !rows.isEmpty) {
         userStatus = true
-
-        val delta = event.updatedValues.get("rating").asInstanceOf[Double].toFloat - event.prevValues.get("rating").asInstanceOf[Double].toFloat
+        var delta = 0.0f
+      val prevRatingValue = event.prevValues.get("rating").asInstanceOf[Double].toFloat
+        if(prevRatingValue!=null){
+          delta = event.updatedValues.get("rating").asInstanceOf[Double].toFloat - event.prevValues.get("rating").asInstanceOf[Double].toFloat
+        }else{
+          delta = event.updatedValues.get("rating").asInstanceOf[Double].toFloat
+        }
         val validReview = event.updatedValues.get("review").asInstanceOf[String]
 
         if (delta != 0.0f || (validReview.size > 100)) {
           var tempRow: Row = null
-
 
           val ratingQuery = QueryBuilder.select().all().from(config.dbKeyspace, config.ratingsSummaryTable)
             .where(QueryBuilder.eq(config.activityId, event.activityId))
@@ -62,7 +66,7 @@ class RatingFunction(config: RatingConfig, @transient var cassandraUtil: Cassand
           val ratingRows: java.util.List[Row] = cassandraUtil.find(ratingQuery.toString);
           var updatedRating: Float = 0.0f
           var updatedRatingValues: HashMap[Float, Float] = new HashMap[Float, Float]()
-          var prevRating: Float = 0
+          var prevRating: Float = 0.0f
           var x = 0.0f
           var sumOfTotalRating: Float = 0.0f
           var totalNumberOfRatings: Float = 0.0f
@@ -72,8 +76,9 @@ class RatingFunction(config: RatingConfig, @transient var cassandraUtil: Cassand
             tempRow = ratingRows.asScala.toList(0)
 
             if (delta != 0.0f) {
-              prevRating = event.prevValues.get("rating").asInstanceOf[Double].toFloat
-
+              if(prevRatingValue!=null) {
+                prevRating = event.prevValues.get("rating").asInstanceOf[Double].toFloat
+              }
               updatedRating = event.updatedValues.get("rating").asInstanceOf[Double].toFloat
 
               updatedRatingValues = update_ratings_count(tempRow, prevRating, updatedRating)
@@ -98,6 +103,11 @@ class RatingFunction(config: RatingConfig, @transient var cassandraUtil: Cassand
             totalNumberOfRatings,
             summary)
 
+        }else{
+          if (null != getRatingLookUp(event)) {
+            deleteRatingLookup(event)
+          }
+          saveRatingLookup(event)
         }
       } else {
         context.output(config.failedEvent, event)
@@ -106,10 +116,8 @@ class RatingFunction(config: RatingConfig, @transient var cassandraUtil: Cassand
     catch {
       case ex: Exception => {
         ex.printStackTrace()
-       // println(ex)
         context.output(config.failedEvent, event)
        logger.info("Event throwing exception: ", ex.getMessage)
-      //  throw ex
       }
     }
   }
@@ -201,8 +209,8 @@ class RatingFunction(config: RatingConfig, @transient var cassandraUtil: Cassand
   def getRatingSummary(event: Event): Row = {
     val query = QueryBuilder.select.all()
       .from(config.dbKeyspace, config.ratingsSummaryTable).
-      where(QueryBuilder.eq("activity_id", event.activityId))
-      .and(QueryBuilder.eq("activity_type", event.activityType)).toString
+      where(QueryBuilder.eq("activityid", event.activityId))
+      .and(QueryBuilder.eq("activitytype", event.activityType)).toString
     logger.info("completed query in getratingsummary")
 
     val row = cassandraUtil.findOne(query)
@@ -213,24 +221,29 @@ class RatingFunction(config: RatingConfig, @transient var cassandraUtil: Cassand
   }
 
   def getRatingLookUp(event: Event): Row = {
+    var prevRating = 0.0f
+
+    if(event.prevValues!=null) {
+      prevRating = event.prevValues.get("rating").asInstanceOf[Double].toFloat
+    }
     val query = QueryBuilder.select.all()
       .from(config.dbKeyspace, config.ratingsLookupTable).
-      where(QueryBuilder.eq("activity_id", event.activityId))
-      .and(QueryBuilder.eq("activity_type", event.activityType))
-      .and(QueryBuilder.eq("rating", event.prevValues.get("rating").asInstanceOf[Double].toFloat)).toString
+      where(QueryBuilder.eq("activityid", event.activityId))
+      .and(QueryBuilder.eq("activitytype", event.activityType))
+      .and(QueryBuilder.eq("rating", prevRating)).toString
 
     val row = cassandraUtil.findOne(query)
     logger.info("Successfully retrieved the rating for summary - activityId: "
       + event.activityId + " ,activityType: " + event.activityType + " ,userId: "
-      + event.userId + "with " + "prevValues: " + event.prevValues + "and updateValues" + event.updatedValues)
+      + event.userId + "with " + "and updateValues" + event.updatedValues)
     row
   }
 
   def saveRatingSummary(event: Event, updatedRatingValues: HashMap[Float, Float],
                         summary: String, sumOfTotalRating: Float, totalRating: Float): Unit = {
     val query = QueryBuilder.insertInto(config.dbKeyspace, config.ratingsSummaryTable)
-      .value("activity_id", event.activityId)
-      .value("activity_type", event.activityType)
+      .value("activityid", event.activityId)
+      .value("activitytype", event.activityType)
       .value("latest50reviews", summary)
       .value("sum_of_total_ratings", sumOfTotalRating)
       .value("total_number_of_ratings", totalRating)
@@ -244,7 +257,7 @@ class RatingFunction(config: RatingConfig, @transient var cassandraUtil: Cassand
     cassandraUtil.upsert(query)
     logger.info("Successfully processed the rating event - activityId: "
       + event.activityId + " ,activityType: " + event.activityType + " ,userId: "
-      + event.userId + "with " + "prevValues: " + event.prevValues + "and updateValues" + event.updatedValues)
+      + event.userId + "with "+ "and updateValues" + event.updatedValues)
   }
 
   def deleteRatingLookup(event: Event): Unit = {
@@ -254,8 +267,8 @@ class RatingFunction(config: RatingConfig, @transient var cassandraUtil: Cassand
     logger.info("inside beginning of deleteRatingLookup ")
     val query = QueryBuilder.delete(config.dbKeyspace, config.ratingsLookupTable)
       .from(config.dbKeyspace, config.ratingsSummaryTable)
-      .where(QueryBuilder.eq("activity_id", event.activityId))
-      .and(QueryBuilder.eq("activity_type", event.activityType))
+      .where(QueryBuilder.eq("activityid", event.activityId))
+      .and(QueryBuilder.eq("activitytype", event.activityType))
       .and(QueryBuilder.eq("rating", event.updatedValues.get("rating").asInstanceOf[Double].toFloat))
       .and(QueryBuilder.eq("updatedon", timeBasedUuid)).toString
 
@@ -268,12 +281,12 @@ class RatingFunction(config: RatingConfig, @transient var cassandraUtil: Cassand
   }
 
   def saveRatingLookup(event: Event): Unit = {
-    val updatingTime = event.prevValues.get("updatedOn").asInstanceOf[String]
+    val updatingTime = event.updatedValues.get("updatedOn").asInstanceOf[String]
     val timeBasedUuid = UUID.fromString(updatingTime)
     logger.info("inside saveratinglookup")
     val query = QueryBuilder.insertInto(config.dbKeyspace, config.ratingsLookupTable)
-      .value("activity_id", event.activityId)
-      .value("activity_type", event.activityType)
+      .value("activityid", event.activityId)
+      .value("activitytype", event.activityType)
       .value("rating", event.updatedValues.get("rating").asInstanceOf[Double].toFloat)
       .value("updatedon", timeBasedUuid)
       .value("review", event.updatedValues.get("review").toString)
@@ -290,11 +303,11 @@ class RatingFunction(config: RatingConfig, @transient var cassandraUtil: Cassand
     val updatingTime = event.prevValues.get("updatedOn").asInstanceOf[String]
     val timeBasedUuid = UUID.fromString(updatingTime)
     val query = QueryBuilder.insertInto(config.dbKeyspace, config.ratingsLookupTable)
-      .value("activity_id", event.activityId)
-      .value("activity_type", event.activityType)
+      .value("activityid", event.activityId)
+      .value("activitytype", event.activityType)
       .value("rating", event.updatedValues.get("rating").asInstanceOf[Float])
       .value("updatedon", timeBasedUuid)
-      .value("user_id", event.userId).toString
+      .value("userid", event.userId).toString
 
     cassandraUtil.upsert(query)
     logger.info("Successfully saved the rating for lookup - activityId: "
@@ -320,8 +333,8 @@ class RatingFunction(config: RatingConfig, @transient var cassandraUtil: Cassand
       .and(QueryBuilder.set("totalcount3stars", updatedRatingValues.get(3.0f)))
       .and(QueryBuilder.set("totalcount4stars", updatedRatingValues.get(4.0f)))
       .and(QueryBuilder.set("totalcount5stars", updatedRatingValues.get(5.0f)))
-      .where(QueryBuilder.eq("activity_id", event.activityId))
-      .and(QueryBuilder.eq("activity_type", event.activityType))
+      .where(QueryBuilder.eq("activityid", event.activityId))
+      .and(QueryBuilder.eq("activitytype", event.activityType))
     logger.info("added query in updateRatingSummary  " + updateQuery.toString)
 
     cassandraUtil.upsert(updateQuery.toString)

@@ -34,8 +34,8 @@ class RatingConfig (override val config: Config) extends BaseJobConfig(config, "
   // constants
   val courseId = "courseid"
   val userId = "userid"
-  val activityId = "activity_id"
-  val activityType = "activity_type"
+  val activityId = "activityid"
+  val activityType = "activitytype"
 
   // Consumers
   val RatingConsumer = "rating-consumer"
