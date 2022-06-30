@@ -189,7 +189,7 @@ class RatingFunction(config: RatingConfig, @transient var cassandraUtil: Cassand
     var ratingQueue = mutable.Queue[RatingJson]()
     var updatedReviewSize: Int = 0
     if (event.updatedValues.get("review") != null)
-    val updatedReviewSize = event.updatedValues.get("review").asInstanceOf[String].size
+    updatedReviewSize = event.updatedValues.get("review").asInstanceOf[String].size
 
       if (summary!=null) {
         var ratingJson: Array[RatingJson] = gson.fromJson(summary, classOf[Array[RatingJson]])
