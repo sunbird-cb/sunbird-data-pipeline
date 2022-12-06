@@ -24,12 +24,8 @@ class RestUtil extends Serializable {
             val content = Source.fromInputStream(inputStream, "UTF-8").getLines.mkString
             inputStream.close()
             content
-
         } finally {
             httpClient.close()
         }
-
     }
-
-
 }

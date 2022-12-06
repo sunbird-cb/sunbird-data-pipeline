@@ -3,6 +3,7 @@ package org.sunbird.dp.rating.function
 import com.datastax.driver.core.Row
 import com.datastax.driver.core.querybuilder.QueryBuilder
 import com.google.gson.Gson
+import org.apache.commons.collections.{CollectionUtils, MapUtils}
 import org.apache.flink.api.common.typeinfo.TypeInformation
 import org.apache.flink.configuration.Configuration
 import org.apache.flink.streaming.api.functions.ProcessFunction
@@ -10,14 +11,15 @@ import org.slf4j.LoggerFactory
 import org.sunbird.dp.contentupdater.core.util.RestUtil
 import org.sunbird.dp.core.cache.DataCache
 import org.sunbird.dp.core.job.{BaseProcessFunction, Metrics}
-import org.sunbird.dp.core.util.{CassandraUtil, JSONUtil}
+import org.sunbird.dp.core.util.CassandraUtil
 import org.sunbird.dp.rating.domain.Event
 import org.sunbird.dp.rating.task.RatingConfig
+import org.sunbird.dp.rating.util.RestApiUtil
 
+import java.util
 import java.util.{HashMap, UUID}
-import scala.collection.mutable
-
 import scala.collection.JavaConverters._
+import scala.collection.mutable
 
 class RatingFunction(config: RatingConfig, @transient var cassandraUtil: CassandraUtil = null)(implicit val mapTypeInfo: TypeInformation[Event])
   extends BaseProcessFunction[Event, Event](config) {
@@ -26,6 +28,7 @@ class RatingFunction(config: RatingConfig, @transient var cassandraUtil: Cassand
 
   private var dataCache: DataCache = _
   private var restUtil: RestUtil = _
+  private var restApiUtil:RestApiUtil=_
 
   override def metricsList(): List[String] = {
     List()
@@ -34,13 +37,17 @@ class RatingFunction(config: RatingConfig, @transient var cassandraUtil: Cassand
   override def open(parameters: Configuration): Unit = {
     super.open(parameters)
     cassandraUtil = new CassandraUtil(config.dbHost, config.dbPort)
+    restApiUtil=new RestApiUtil()
   }
 
   case class RatingJson(objectType: String, var user_id: String, var date: String, var rating: Float, var review: String)
 
+
   override def processElement(event: Event, context: ProcessFunction[Event, Event]#Context, metrics: Metrics): Unit = {
     var userStatus: Boolean = false
     try {
+      val courseId = event.activityId
+      val versionKey = getVersionKey(courseId)
       val query = QueryBuilder.select().column("userid").from(config.dbCoursesKeyspace, config.courseTable)
         .where(QueryBuilder.eq(config.userId, event.userId)).and(QueryBuilder.eq(config.courseId, event.activityId))
       val rows: java.util.List[Row] = cassandraUtil.find(query.toString);
@@ -89,7 +96,7 @@ class RatingFunction(config: RatingConfig, @transient var cassandraUtil: Cassand
             if (validReview.size > 100 && delta == 0.0f) {
               sumOfTotalRating = tempRow.getFloat("sum_of_total_ratings")
               totalNumberOfRatings = tempRow.getFloat("total_number_of_ratings")
-                prevRating = event.prevValues.get("rating").asInstanceOf[Double].toFloat
+              prevRating = event.prevValues.get("rating").asInstanceOf[Double].toFloat
               updatedRating = event.updatedValues.get("rating").asInstanceOf[Double].toFloat
               updatedRatingValues = update_ratings_count(tempRow, prevRating, updatedRating)
               if(tempRow.getString("latest50reviews")!=null) {
@@ -106,10 +113,10 @@ class RatingFunction(config: RatingConfig, @transient var cassandraUtil: Cassand
           updateDB(event, updatedRatingValues, sumOfTotalRating,
             totalNumberOfRatings,
             summary)
-
+          updateToContentMetaData(config.CONTENT_BASE_HOST + config.CONTENT_UPDATE_ENDPOINT + courseId, versionKey, sumOfTotalRating, totalNumberOfRatings)
         }
         if (validReview.size < 100 && delta == 0.0f) {
-              tempRow = ratingRows.asScala.toList(0)
+          tempRow = ratingRows.asScala.toList(0)
           val sumOfTotalRating = tempRow.getFloat("sum_of_total_ratings")
           val totalNumberOfRatings = tempRow.getFloat("total_number_of_ratings")
           val updatedRatingValues = update_ratings_count(tempRow, event.prevValues.get("rating").asInstanceOf[Double].toFloat, event.updatedValues.get("rating").asInstanceOf[Double].toFloat)
@@ -120,11 +127,12 @@ class RatingFunction(config: RatingConfig, @transient var cassandraUtil: Cassand
           updateDB(event, updatedRatingValues, sumOfTotalRating,
             totalNumberOfRatings,
             summary)
+          updateToContentMetaData(config.CONTENT_BASE_HOST + config.CONTENT_UPDATE_ENDPOINT + courseId, versionKey, sumOfTotalRating, totalNumberOfRatings)
         }
-          if (null != getRatingLookUp(event)) {
-            deleteRatingLookup(event)
-          }
-          saveRatingLookup(event)
+        if (null != getRatingLookUp(event)) {
+          deleteRatingLookup(event)
+        }
+        saveRatingLookup(event)
       } else {
         context.output(config.failedEvent, event)
       }
@@ -146,11 +154,11 @@ class RatingFunction(config: RatingConfig, @transient var cassandraUtil: Cassand
 
     var updatedReviews = ""
     if (null == ratingDBResult) {
-        updatedReviews = update_Top50_Review_Summary(null, event)
-        saveRatingSummary(event, updatedRatingValues, updatedReviews, sumOfTotalRating, totalRating)
+      updatedReviews = update_Top50_Review_Summary(null, event)
+      saveRatingSummary(event, updatedRatingValues, updatedReviews, sumOfTotalRating, totalRating)
     }
     else {
-        updatedReviews = update_Top50_Review_Summary(summary, event)
+      updatedReviews = update_Top50_Review_Summary(summary, event)
       updateRatingSummary(event, updatedRatingValues, updatedReviews, sumOfTotalRating, totalRating)
     }
   }
@@ -173,7 +181,7 @@ class RatingFunction(config: RatingConfig, @transient var cassandraUtil: Cassand
     val newRating = (updatedRating).floor
     val oldRating = (prevRating).floor
     if (ratingMap.containsKey(newRating) && newRating != oldRating) {
-        ratingMap.put(newRating, ratingMap.get(newRating) + 1)
+      ratingMap.put(newRating, ratingMap.get(newRating) + 1)
     }
     if (oldRating!=0.0f && ratingMap.get(oldRating) != 0.0f && newRating != oldRating) {
       if (ratingMap.containsKey(oldRating) && newRating != oldRating) {
@@ -189,21 +197,20 @@ class RatingFunction(config: RatingConfig, @transient var cassandraUtil: Cassand
     var ratingQueue = mutable.Queue[RatingJson]()
     val updatedReviewSize = event.updatedValues.get("review").asInstanceOf[String].size
 
-      if (summary!=null) {
-        var ratingJson: Array[RatingJson] = gson.fromJson(summary, classOf[Array[RatingJson]])
-        ratingJson.foreach(
-          row => {
-            if(!row.user_id.asInstanceOf[String].equals(event.userId.asInstanceOf[String])){
-              ratingQueue.enqueue(row)
-            }
-          });
-        if (ratingQueue.size >= 50) {
-          ratingQueue.dequeue()
-        }
+    if (summary!=null) {
+      var ratingJson: Array[RatingJson] = gson.fromJson(summary, classOf[Array[RatingJson]])
+      ratingJson.foreach(
+        row => {
+          if(!row.user_id.asInstanceOf[String].equals(event.userId.asInstanceOf[String])){
+            ratingQueue.enqueue(row)
+          }
+        });
+      if (ratingQueue.size >= 50) {
+        ratingQueue.dequeue()
       }
+    }
 
     if (updatedReviewSize > 100) {
-
       ratingQueue.enqueue(RatingJson("review",
         event.userId.asInstanceOf[String],
         event.updatedValues.get("updatedOn").asInstanceOf[String],
@@ -340,6 +347,71 @@ class RatingFunction(config: RatingConfig, @transient var cassandraUtil: Cassand
     cassandraUtil.upsert(updateQuery.toString)
     logger.info("Successfully updated ratings in rating summary  - activity_id: "
       + event.activityId + " ,activity_type: " + event.activityType)
+  }
+
+  def getVersionKey(courseId: String) :String={
+    var response=new String()
+    val param=new util.HashMap[String,Any]()
+    param.put(config.OFFSET,0)
+    param.put(config.LIMIT,1)
+    val filters=new util.HashMap[String,Any]()
+    filters.put(config.STATUS,new util.ArrayList[String](){
+      add("LIVE")
+    })
+    filters.put(config.IDENTIFIER,courseId)
+    val sortBy=new util.HashMap[String,Any]()
+    sortBy.put(config.LAST_UPDATE_ON,config.DESC)
+    val fields=new util.ArrayList[String]()
+    fields.add(config.VERSION_KEY)
+    param.put(config.FILTERS,filters)
+    param.put(config.SORTBY,sortBy)
+    param.put(config.FIELDS,fields)
+    val request=new util.HashMap[String,Any]()
+    request.put(config.REQUEST,param)
+    logger.info("req Obj "+request)
+    if(MapUtils.isNotEmpty(request)) {
+      response=restApiUtil.postRequest(config.KM_BASE_HOST+config.CONTENT_SEARCH_ENDPOINT,request)
+    }
+    var versionKey=new String()
+    val gson = new Gson()
+    val responseMap=gson.fromJson(response, classOf[util.HashMap[String,Any]])
+    logger.info("ver "+responseMap)
+    if(MapUtils.isNotEmpty(responseMap)){
+      val result = responseMap.get(config.RESULT).asInstanceOf[util.Map[String, Any]]
+      logger.info("request " + result)
+      val content = result.get(config.CONTENT).asInstanceOf[util.List[util.Map[String, Any]]]
+      logger.info("content " + content)
+      if (CollectionUtils.isNotEmpty(content)) {
+        content.forEach(map => {
+          logger.info("map " + map)
+          logger.info("key " + map.getOrDefault("versionKey", ""))
+          versionKey = map.getOrDefault("versionKey", "").toString
+        })
+      }
+    }
+    logger.info("versoN "+versionKey)
+    versionKey
+  }
+  def updateToContentMetaData(uri: String,versionKey:String,sumOfTotalRating: Float, totalNumberOfRatings: Float):Unit = {
+    logger.info("Entering updateToContentMetaData")
+    new Thread(() => {
+      try {
+        val content = new util.HashMap[String, Any]()
+        content.put(config.VERSION_KEY,versionKey)
+        content.put(config.AVERAGE_RATING, sumOfTotalRating)
+        content.put(config.TOTAL_RATING_COUNT, totalNumberOfRatings)
+        val request: java.util.Map[String, Any] = new java.util.HashMap[String, Any]()
+        request.put(config.REQUEST, new java.util.HashMap[String, Any]() {
+          {
+            put(config.CONTENT, content)
+          }
+        })
+        restApiUtil.patchRequest(uri, request)
+      } catch {
+        case e: Exception => e.printStackTrace()
+          logger.info(String.format("Failed during sending mail %s", e.getMessage()))
+      }
+    }).start()
   }
 }
 

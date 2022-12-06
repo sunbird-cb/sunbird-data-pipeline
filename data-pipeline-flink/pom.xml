@@ -32,6 +32,8 @@
 		<module>user-cache-updater-2.0</module>
 		<module>cb-preprocessor</module>
 		<module>rating</module>
+		<module>content-event-for-rating-update</module>
+		<module>assessment-progress</module>
 	</modules>
 
 	<properties>

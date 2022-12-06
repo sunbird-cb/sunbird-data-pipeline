@@ -31,12 +31,32 @@ class RatingConfig (override val config: Config) extends BaseJobConfig(config, "
   val dbPort: Int = config.getInt("ext-cassandra.port")
   val dbCoursesKeyspace: String = config.getString("ext-cassandra.courses_keyspace")
 
+  //url
+  val CONTENT_BASE_HOST:String=config.getString("url.base_host")
+  val CONTENT_UPDATE_ENDPOINT:String=config.getString("url.content_update")
+  val KM_BASE_HOST:String=config.getString("url.km_base_host")
+  val CONTENT_SEARCH_ENDPOINT:String=config.getString("url.content_search")
+
   // constants
   val courseId = "courseid"
   val userId = "userid"
   val activityId = "activityid"
   val activityType = "activitytype"
-
+  val CONTENT="content"
+  val REQUEST="request"
+  val AVERAGE_RATING="me_averageRating"
+  val TOTAL_RATING_COUNT="me_totalRatingsCount"
+  val OFFSET="offset"
+  val LIMIT="limit"
+  val STATUS="status"
+  val IDENTIFIER="identifier"
+  val LAST_UPDATE_ON="lastUpdatedOn"
+  val DESC="desc"
+  val VERSION_KEY="versionKey"
+  val FILTERS="filters"
+  val SORTBY="sort_By"
+  val FIELDS="fields"
+  val RESULT="result"
   // Consumers
   val RatingConsumer = "rating-consumer"
 

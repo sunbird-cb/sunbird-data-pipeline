@@ -9,7 +9,6 @@ class Event(eventMap: util.Map[String, Any]) extends Events(eventMap) {
 
   def versionNumber: Int = {
     telemetry.read[Int]("version").get
-
   }
 
   def action: String = {

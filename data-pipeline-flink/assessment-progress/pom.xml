@@ -14,12 +14,12 @@
     </parent>
 
     <groupId>org.sunbird.dp.jobs</groupId>
-    <artifactId>rating</artifactId>
+    <artifactId>assessment-progress</artifactId>
     <version>2.0.0</version>
     <packaging>jar</packaging>
-    <name>Rating</name>
+    <name>AssessmentProgress</name>
     <description>
-        Rating Feature
+        Assessment Progress
     </description>
 
     <properties>
@@ -27,21 +27,21 @@
         <scoverage.plugin.version>1.4.0</scoverage.plugin.version>
     </properties>
 
-<!--    <repositories>-->
-<!--        <repository>-->
-<!--            <id>scala-tools.org</id>-->
-<!--            <name>Scala-Tools Maven2 Repository</name>-->
-<!--            <url>http://scala-tools.org/repo-releases</url>-->
-<!--        </repository>-->
-<!--    </repositories>-->
+    <!--    <repositories>-->
+    <!--        <repository>-->
+    <!--            <id>scala-tools.org</id>-->
+    <!--            <name>Scala-Tools Maven2 Repository</name>-->
+    <!--            <url>http://scala-tools.org/repo-releases</url>-->
+    <!--        </repository>-->
+    <!--    </repositories>-->
 
-<!--    <pluginRepositories>-->
-<!--        <pluginRepository>-->
-<!--            <id>scala-tools.org</id>-->
-<!--            <name>Scala-Tools Maven2 Repository</name>-->
-<!--            <url>http://scala-tools.org/repo-releases</url>-->
-<!--        </pluginRepository>-->
-<!--    </pluginRepositories>-->
+    <!--    <pluginRepositories>-->
+    <!--        <pluginRepository>-->
+    <!--            <id>scala-tools.org</id>-->
+    <!--            <name>Scala-Tools Maven2 Repository</name>-->
+    <!--            <url>http://scala-tools.org/repo-releases</url>-->
+    <!--        </pluginRepository>-->
+    <!--    </pluginRepositories>-->
 
     <dependencies>
         <dependency>
@@ -135,22 +135,22 @@
 
 
         <!--        <dependency>-->
-<!--            <groupId>org.scala-lang</groupId>-->
-<!--            <artifactId>scala-library</artifactId>-->
-<!--            <version>${scala.version}</version>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>junit</groupId>-->
-<!--            <artifactId>junit</artifactId>-->
-<!--            <version>4.4</version>-->
-<!--            <scope>test</scope>-->
-<!--        </dependency>-->
-<!--        <dependency>-->
-<!--            <groupId>org.specs</groupId>-->
-<!--            <artifactId>specs</artifactId>-->
-<!--            <version>1.2.5</version>-->
-<!--            <scope>test</scope>-->
-<!--        </dependency>-->
+        <!--            <groupId>org.scala-lang</groupId>-->
+        <!--            <artifactId>scala-library</artifactId>-->
+        <!--            <version>${scala.version}</version>-->
+        <!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>junit</groupId>-->
+        <!--            <artifactId>junit</artifactId>-->
+        <!--            <version>4.4</version>-->
+        <!--            <scope>test</scope>-->
+        <!--        </dependency>-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.specs</groupId>-->
+        <!--            <artifactId>specs</artifactId>-->
+        <!--            <version>1.2.5</version>-->
+        <!--            <scope>test</scope>-->
+        <!--        </dependency>-->
     </dependencies>
 
     <build>
@@ -198,7 +198,7 @@
                             <transformers>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>org.sunbird.dp.rating.task.RatingTask</mainClass>
+                                    <mainClass>org.sunbird.dp.rating.task.AssessmentProgressTask</mainClass>
                                 </transformer>
                                 <!-- append default configs -->
                                 <transformer
@@ -253,7 +253,7 @@
                 <configuration>
                     <reportsDirectory>${project.build.directory}/surefire-reports</reportsDirectory>
                     <junitxml>.</junitxml>
-                    <filereports>rating-testsuite.txt</filereports>
+                    <filereports>assessment-testsuite.txt</filereports>
                 </configuration>
                 <executions>
                     <execution>
@@ -276,15 +276,15 @@
             </plugin>
         </plugins>
     </build>
-<!--    <reporting>-->
-<!--        <plugins>-->
-<!--            <plugin>-->
-<!--                <groupId>org.scala-tools</groupId>-->
-<!--                <artifactId>maven-scala-plugin</artifactId>-->
-<!--                <configuration>-->
-<!--                    <scalaVersion>${scala.version}</scalaVersion>-->
-<!--                </configuration>-->
-<!--            </plugin>-->
-<!--        </plugins>-->
-<!--    </reporting>-->
+    <!--    <reporting>-->
+    <!--        <plugins>-->
+    <!--            <plugin>-->
+    <!--                <groupId>org.scala-tools</groupId>-->
+    <!--                <artifactId>maven-scala-plugin</artifactId>-->
+    <!--                <configuration>-->
+    <!--                    <scalaVersion>${scala.version}</scalaVersion>-->
+    <!--                </configuration>-->
+    <!--            </plugin>-->
+    <!--        </plugins>-->
+    <!--    </reporting>-->
 </project>
