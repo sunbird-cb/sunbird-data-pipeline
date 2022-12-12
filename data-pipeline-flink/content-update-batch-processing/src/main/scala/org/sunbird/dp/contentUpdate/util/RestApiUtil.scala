@@ -1,4 +1,4 @@
-package org.sunbird.dp.contentupdate.util
+package org.sunbird.dp.contentUpdate.util
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect.Visibility
 import com.fasterxml.jackson.annotation.PropertyAccessor
@@ -19,19 +19,17 @@ class RestApiUtil extends Serializable {
 
   def postRequest(uri: String, params: java.util.Map[String, Any]): String = {
     logger.info("Entering Post mode Rest Call")
-    logger.info("uri "+uri)
     val post = new HttpPost(uri)
     val mapper = new ObjectMapper() with ScalaObjectMapper
     mapper.setVisibility(PropertyAccessor.ALL, Visibility.ANY)
     val jsonString = mapper.writeValueAsString(params)
-    logger.info("jsonString1 "+jsonString)
     post.setHeader("Content-type", "application/json")
     post.setEntity(new StringEntity(jsonString))
     val client = new DefaultHttpClient()
     val response = client.execute(post)
     val statusCode = response.getStatusLine.getStatusCode
     if (statusCode.equals(200)) {
-      logger.info("Rest Call successful")
+      logger.info("Http Post Mode Call successful")
     }
     val myObjectMapper = new ObjectMapper()
     myObjectMapper.configure(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES, false)
@@ -47,7 +45,6 @@ class RestApiUtil extends Serializable {
     val mapper = new ObjectMapper() with ScalaObjectMapper
     mapper.setVisibility(PropertyAccessor.ALL, Visibility.ANY)
     val jsonString = mapper.writeValueAsString(params)
-    logger.info("json String2 " + jsonString)
     patch.setHeader("Content-type", "application/json")
     patch.setEntity(new StringEntity(jsonString))
     val client = new DefaultHttpClient()
@@ -56,7 +53,7 @@ class RestApiUtil extends Serializable {
     logger.info("response " + response.toString)
     logger.info("statusCode " + statusCode)
     if (statusCode.equals(200)) {
-      logger.info("patch Call successful")
+      logger.info("Http Patch Mode Call successful")
     }
     statusCode
   }

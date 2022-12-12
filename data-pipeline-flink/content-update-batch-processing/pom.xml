@@ -14,12 +14,12 @@
     </parent>
 
     <groupId>org.sunbird.dp.jobs</groupId>
-    <artifactId>content-event-for-rating-update</artifactId>
+    <artifactId>content-update-event</artifactId>
     <version>2.0.0</version>
     <packaging>jar</packaging>
-    <name>ContentUpdateForRatingUpdate</name>
+    <name>ContentUpdate</name>
     <description>
-        Content Update Event For Rating Update
+        Content Update Event
     </description>
 
     <properties>
@@ -198,7 +198,7 @@
                             <transformers>
                                 <transformer
                                         implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
-                                    <mainClass>org.sunbird.dp.contentupdate.task.ContentUpdateEventTask</mainClass>
+                                    <mainClass>org.sunbird.dp.contentUpdate.task.ContentUpdateEventStreamTask</mainClass>
                                 </transformer>
                                 <!-- append default configs -->
                                 <transformer
