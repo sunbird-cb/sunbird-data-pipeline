@@ -13,7 +13,7 @@ class AssessmentConfig (override val config: Config) extends BaseJobConfig(confi
   implicit val mapTypeInfo: TypeInformation[Event] = TypeExtractor.getForClass(classOf[Event])
   // Kafka Topics Configuration
   val assessmentInputTopic: String = config.getString("kafka.assessment.input.topic")
-  val passbookInputTopic: String = config.getString("kafka.passbook.input.topic")
+  val passbookInputTopic: String = config.getString("kafka.generate.certificate.topic")
 
   // assessment specific
   val assessmentSubmitParallelism: Int = config.getInt("task.assessmentSubmit.parallelism")
