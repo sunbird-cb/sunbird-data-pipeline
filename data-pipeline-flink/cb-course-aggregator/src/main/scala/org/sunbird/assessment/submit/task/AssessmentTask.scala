@@ -7,7 +7,7 @@ import org.apache.flink.api.java.typeutils.TypeExtractor
 import org.apache.flink.api.java.utils.ParameterTool
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment
 import org.sunbird.assessment.submit.domain.Event
-import org.sunbird.assessment.submit.functions.{AssessmentSubmitFunction, competencyUpdaterFunction}
+import org.sunbird.assessment.submit.functions.{AssessmentSubmitFunction, CompetencyUpdaterFunction}
 import org.sunbird.dp.core.job.FlinkKafkaConnector
 import org.sunbird.dp.core.util.FlinkUtil
 
@@ -40,7 +40,7 @@ class AssessmentTask(config: AssessmentConfig, kafkaConnector: FlinkKafkaConnect
 
     val passbookStream =
       env.addSource(passbookSource, config.PassbookConsumer).uid(config.PassbookConsumer).rebalance()
-        .process(new competencyUpdaterFunction(config)).setParallelism(config.passbookParallelism)
+        .process(new CompetencyUpdaterFunction(config)).setParallelism(config.passbookParallelism)
         .name(config.passbookFunction).uid(config.passbookFunction)
     passbookStream.getSideOutput(config.passbookFailedEvent).addSink(kafkaConnector.kafkaEventSink[Event](config.kafkaIssueTopic))
       .name(config.passbookIssueEventSink).uid(config.passbookIssueEventSink)
