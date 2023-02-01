@@ -77,11 +77,6 @@ scale_properties:
     scale_target_value: {{ flink_job_names['rating'].scale_target_value | default(0) }}
     min_replica: {{ flink_job_names['rating'].min_replica | default(1) }}
     max_replica: {{ flink_job_names['rating'].max_replica | default(2) }}
-  cb-course-aggregator:
-    enabled: {{ flink_job_names['cb-course-aggregator'].scale_enabled | lower}}
-    scale_target_value: {{ flink_job_names['cb-course-aggregator'].scale_target_value | default(0) }}
-    min_replica: {{ flink_job_names['cb-course-aggregator'].min_replica | default(1) }}
-    max_replica: {{ flink_job_names['cb-course-aggregator'].max_replica | default(2) }}
   ingest-router:
     enabled: {{ flink_job_names['ingest-router'].scale_enabled | lower}}
     scale_target_value: {{ flink_job_names['ingest-router'].scale_target_value }}
@@ -641,53 +636,6 @@ rating:
     heartbeat.interval: 5000
     taskmanager.memory.process.size: {{ flink_job_names['rating'].taskmanager_process_memory }}
     jobmanager.memory.process.size: {{ flink_job_names['rating'].jobmanager_process_memory }}
-
-cb-course-aggregator:
-  cb-course-aggregator: |+
-    include file("/data/flink/conf/base-config.conf")
-    kafka {
-       output.topic = {{ env_name }}.assessment.final
-       assessment.input.topic = {{ env_name }}.assessment.submit
-       issue.certificate.input.topic = {{ env_name }}.issue.certificate.request
-       groupId = {{ env_name }}-assessment-submit-group
-       success.topic = {{ env_name }}.success.assessment.submit
-    }
-    ext-cassandra {
-          keyspace = "sunbird"
-          user_assessment_data_table = "user_assessment_data"
-          courses_keyspace = "sunbird_courses"
-          user_table="user"
-          table = "assessment_aggregator"
-          host = "{{ core_cassandra_host }}"
-          port = "9042"
-        }
-    skip.events = ["INTERRUPT"]
-    permit.eid = ["AUDIT"]
-    url{
-       km_base_host = "https://{{ domain_name }}/api/"
-       content_search = "content/v1/search"
-       }
-    task {
-      consumer.parallelism = {{ cb_course_aggregator_consumer_parallelism }}
-      passbook.parallelism = 1
-      downstream.parallelism = {{ cb_course_aggregator_operators_parallelism }}
-      assessmentSubmit {
-        parallelism = {{ cb_course_aggregator_parallelism }}
-      }
-    }
-
-  flink-conf: |+
-    jobmanager.memory.flink.size: {{ flink_job_names['cb-course-aggregator'].jobmanager_memory }}
-    taskmanager.memory.flink.size: {{ flink_job_names['cb-course-aggregator'].taskmanager_memory }}
-    taskmanager.numberOfTaskSlots: {{ flink_job_names['cb-course-aggregator'].taskslots }}
-    parallelism.default: 1
-    jobmanager.execution.failover-strategy: region
-    taskmanager.memory.network.fraction: 0.1
-    scheduler-mode: reactive
-    heartbeat.timeout: 8000
-    heartbeat.interval: 5000
-    taskmanager.memory.process.size: {{ flink_job_names['cb-course-aggregator'].taskmanager_process_memory }}
-    jobmanager.memory.process.size: {{ flink_job_names['cb-course-aggregator'].jobmanager_process_memory }}
 
 druid-validator:
   druid-validator: |+
