@@ -31,6 +31,7 @@
 		<module>assessment-aggregator</module>
 		<module>user-cache-updater-2.0</module>
 		<module>cb-preprocessor</module>
+		<module>cb-course-aggregator</module>
 		<module>rating</module>
 	</modules>
 

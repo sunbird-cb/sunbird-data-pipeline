@@ -119,6 +119,12 @@ rating_operators_parallelism: 1
 rating_key_expiry_seconds: 3600
 rating_parallelism: 1
 
+### assessment-submit related vars
+assessment_submit_consumer_parallelism: 1
+assessment_submit_operators_parallelism: 1
+assessment_submit_key_expiry_seconds: 3600
+assessment_submit_parallelism: 1
+
 ### Druid-validator related vars
 druid_validator_consumer_parallelism: 1
 druid_validator_operators_parallelism: 1

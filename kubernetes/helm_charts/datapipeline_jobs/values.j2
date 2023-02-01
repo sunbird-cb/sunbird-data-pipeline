@@ -52,6 +52,11 @@ scale_properties:
     scale_target_value: {{ flink_job_names['assessment-aggregator'].scale_target_value | default(0) }}
     min_replica: {{ flink_job_names['assessment-aggregator'].min_replica | default(1) }}
     max_replica: {{ flink_job_names['assessment-aggregator'].max_replica | default(2) }}
+  assessment-submit:
+    enabled: {{ flink_job_names['assessment-submit'].scale_enabled | lower}}
+    scale_target_value: {{ flink_job_names['assessment-submit'].scale_target_value | default(0) }}
+    min_replica: {{ flink_job_names['assessment-submit'].min_replica | default(1) }}
+    max_replica: {{ flink_job_names['assessment-submit'].max_replica | default(2) }}
   content-cache-updater:
     enabled: {{ flink_job_names['content-cache-updater'].scale_enabled | lower}}
     scale_target_value: {{ flink_job_names['content-cache-updater'].scale_target_value | default(0) }}
@@ -797,7 +802,7 @@ user-cache-updater-v2:
     jobmanager.execution.failover-strategy: region
     taskmanager.memory.network.fraction: 0.1
 
-assessment-aggregator: 
+assessment-aggregator:
   assessment-aggregator: |+
     include file("/data/flink/conf/base-config.conf")
     kafka {
@@ -842,6 +847,64 @@ assessment-aggregator:
     jobmanager.execution.failover-strategy: region
     taskmanager.memory.network.fraction: 0.1
 
+assessment-submit:
+  assessment-submit: |+
+    include file("/data/flink/conf/base-config.conf")
+    kafka {
+       output.topic = {{ env_name }}.assessment.final
+       input.topic = {{ env_name }}.assessment.submit
+       groupId = {{ env_name }}-assessment-submit-group
+       success.topic = {{ env_name }}.success.assessment.submit
+    }
+    task {
+      consumer.parallelism = {{ assessment_submit_consumer_parallelism }}
+      downstream.parallelism = {{ assessment_submit_operators_parallelism }}
+      assessmentSubmit {
+        parallelism = {{ assessment_submit_parallelism }}
+      }
+    }
+    ext-cassandra {
+          keyspace = "sunbird"
+          user_assessment_data_table = "user_assessment_data"
+          courses_keyspace = "sunbird_courses"
+          table = "assessment_aggregator"
+          host = "{{ core_cassandra_host }}"
+          port = "9042"
+        }
+         redis {
+              database {
+                relationCache.id = 10
+                contentCache.id = 0
+                duplicationstore.id = 9
+                key.expiry.seconds = {{ assessment_submit_key_expiry_seconds }}
+              }
+            }
+            # redis-metadata
+            redis-meta {
+              database {
+                devicestore.id = 2
+                userstore.id = 12
+                contentstore.id = 5
+                dialcodestore.id = 6
+                key.expiry.seconds = {{ assessment_submit_expiry_seconds }}
+              }
+              content.host = {{ redis_meta_content_host }}
+              device.host = {{ redis_meta_device_host }}
+              user.host = {{ redis_meta_user_host }}
+              dialcode.host = {{ redis_meta_dialcode_host }}
+              content.port = {{ redis_meta_content_port }}
+              device.port = {{ redis_meta_device_port }}
+              user.port = {{ redis_meta_user_port }}
+              dialcode.port = {{ redis_meta_dialcode_port }}
+            }
+  flink-conf: |+
+    jobmanager.memory.flink.size: {{ flink_job_names['assessment-submit'].jobmanager_memory }}
+    taskmanager.memory.flink.size: {{ flink_job_names['assessment-submit'].taskmanager_memory }}
+    taskmanager.numberOfTaskSlots: {{ flink_job_names['assessment-submit'].taskslots }}
+    parallelism.default: 1
+    jobmanager.execution.failover-strategy: region
+    taskmanager.memory.network.fraction: 0.1
+
 error-denormalization:
   error-denormalization: |+
     include file("/data/flink/conf/base-config.conf")
@@ -867,7 +930,7 @@ error-denormalization:
     redis {
       database {
         duplicationstore.id = 9
-        key.expiry.seconds = {{ de_normalization_duplicationstore_key_expiry_seconds }} 
+        key.expiry.seconds = {{ de_normalization_duplicationstore_key_expiry_seconds }}
       }
     }
     # redis-metadata
