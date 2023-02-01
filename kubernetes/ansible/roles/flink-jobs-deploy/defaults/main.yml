@@ -119,11 +119,12 @@ rating_operators_parallelism: 1
 rating_key_expiry_seconds: 3600
 rating_parallelism: 1
 
-### assessment-submit related vars
-assessment_submit_consumer_parallelism: 1
-assessment_submit_operators_parallelism: 1
-assessment_submit_key_expiry_seconds: 3600
-assessment_submit_parallelism: 1
+### cb_course_aggregator related vars
+cb_course_aggregator_consumer_parallelism: 1
+cb_course_aggregator_operators_parallelism: 1
+cb_course_aggregator_key_expiry_seconds: 3600
+cb_course_aggregator_parallelism: 1
+cb_course_aggregator_scoresubmit_parallelism: 1
 
 ### Druid-validator related vars
 druid_validator_consumer_parallelism: 1
@@ -168,7 +169,7 @@ middleware_cassandra_assessment_question_type : question
 middleware_cassandra_user_enrolments_table: user_enrolments
 middleware_cassandra_user_activity_agg_table: user_activity_agg
 content_read_api_host: "http://dev.sunbirded.org"
-content_read_api_endpoint: "/api/content/v1/read/" 
+content_read_api_endpoint: "/api/content/v1/read/"
 
 ### to be removed
 job_classname: ""
@@ -227,6 +228,19 @@ flink_job_names:
     scale_target_value: 500000
     min_replica: 1
     max_replica: 2
+  cb-course-aggregator:
+    job_class_name: 'org.sunbird.assessment.submit.task.AssessmentTask'
+    replica: 1
+    jobmanager_memory: 1024m
+    taskmanager_memory: 1024m
+    taskmanager_process_memory: 1700m
+    jobmanager_process_memory: 1600m
+    taskslots: 1
+    cpu_requests: 0.3
+    scale_enabled: true
+    scale_target_value: 500000
+    min_replica: 1
+    max_replica: 2
   de-normalization:
     job_class_name: 'org.sunbird.dp.denorm.task.DenormalizationStreamTask'
     replica: 1
@@ -246,7 +260,7 @@ flink_job_names:
     jobmanager_process_memory: 1600m
     taskslots: 1
     cpu_requests: 0.3
-    scale_enabled: false 
+    scale_enabled: false
   de-normalization-secondary:
     job_class_name: 'org.sunbird.dp.denorm.task.DenormalizationStreamTask'
     replica: 1
@@ -259,7 +273,7 @@ flink_job_names:
     scale_enabled: true
     scale_target_value: 1000000
     min_replica: 1
-    max_replica: 2 
+    max_replica: 2
   de-normalization-primary:
     job_class_name: 'org.sunbird.dp.denorm.task.DenormalizationStreamTask'
     replica: 1
@@ -272,7 +286,7 @@ flink_job_names:
     scale_enabled: true
     scale_target_value: 1000000
     min_replica: 1
-    max_replica: 2      
+    max_replica: 2
   druid-validator:
     job_class_name: 'org.sunbird.dp.validator.task.DruidValidatorStreamTask'
     replica: 1
@@ -371,7 +385,7 @@ flink_job_names:
     jobmanager_process_memory: 1600m
     taskslots: 1
     cpu_requests: 0.3
-    scale_enabled: false 
+    scale_enabled: false
 
 ### controlling the flink jobs log level
 flink_jobs_console_log_level: INFO
