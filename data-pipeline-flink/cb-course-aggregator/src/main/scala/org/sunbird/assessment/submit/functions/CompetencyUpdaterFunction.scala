@@ -52,7 +52,7 @@ class CompetencyUpdaterFunction(config: AssessmentConfig,
                               metrics: Metrics): Unit = {
     logger.info("Received Event in CompetencyUpdaterFunction. Event: " + event.toString)
     try {
-      if (event.actor.get(config.id).equalsIgnoreCase(config.CERTIFICATE_GENERATOR)) {
+      if (event.actor.get("id").equalsIgnoreCase(config.CERTIFICATE_GENERATOR)) {
         val userIds = event.edata.get(config.USER_IDS).asInstanceOf[util.List[String]]
         //TODO -- need to loop through the list of received userIds
         val userId = userIds.get(0)
@@ -108,6 +108,8 @@ class CompetencyUpdaterFunction(config: AssessmentConfig,
           profileDetails.put(config.competencies, userCompetenciesList)
         }
         updateProfileDetails(profileDetails, userId)
+      } else {
+        logger.info("Ignoring event as it is not configured to process it.")
       }
     } catch {
       case ex: Exception =>
