@@ -53,6 +53,7 @@ class CompetencyUpdaterFunction(config: AssessmentConfig,
     logger.info("Received Event in CompetencyUpdaterFunction. Event: " + event.toString)
     try {
       if (event.actor.get("id").equalsIgnoreCase(config.CERTIFICATE_GENERATOR)) {
+        logger.info("Processing course cert issue event. ")
         val userIds = event.edata.get(config.USER_IDS).asInstanceOf[util.List[String]]
         //TODO -- need to loop through the list of received userIds
         val userId = userIds.get(0)
