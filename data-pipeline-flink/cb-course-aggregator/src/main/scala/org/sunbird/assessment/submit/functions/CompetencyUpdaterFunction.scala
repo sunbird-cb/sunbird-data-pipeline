@@ -50,6 +50,7 @@ class CompetencyUpdaterFunction(config: AssessmentConfig,
   override def processElement(event: Event,
                               context: ProcessFunction[Event, Event]#Context,
                               metrics: Metrics): Unit = {
+    logger.info("Received Event in CompetencyUpdaterFunction. Event: " + event.toString)
     try {
       if (event.actor.get(config.id).equalsIgnoreCase(config.CERTIFICATE_GENERATOR)) {
         val userIds = event.edata.get(config.USER_IDS).asInstanceOf[util.List[String]]
