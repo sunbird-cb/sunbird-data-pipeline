@@ -34,6 +34,7 @@
 		<module>rating</module>
 		<module>notification-engine</module>
 		<module>validate-notification-preferences</module>
+		<module>content-meta-rating-update</module>
 	</modules>
 
 	<properties>
