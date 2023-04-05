@@ -39,7 +39,7 @@ class FirstCourseEnrollmentFunction(enrollmentConfig: NotificationEngineConfig)(
         .where(QueryBuilder.eq("userid", userId)).toString
       val rowCount = cassandraUtil.findOne(query);
       val count = rowCount.get(0, classOf[Long])
-      if (count <= 1) {
+      if (count == 1) {
         val userDetails = getUserDetails(userId)
         val courseName = getCourseNameById(courseId)
         if (MapUtils.isNotEmpty(userDetails) && StringUtils.isNotEmpty(courseName)) {
@@ -92,7 +92,7 @@ class FirstCourseEnrollmentFunction(enrollmentConfig: NotificationEngineConfig)(
       })
       val request = new util.HashMap[String, Any]()
       request.put(enrollmentConfig.FILTERS, filters)
-      request.put(enrollmentConfig.FIELDS, enrollmentConfig.CONTENT_SEARCH_FIELDS)
+      request.put(enrollmentConfig.FIELDS, enrollmentConfig.CONTENT_SEARCH_FIELDS.split(",", -1))
       val requestBody = new util.HashMap[String, Any]()
       requestBody.put(enrollmentConfig.REQUEST, request)
       val url: String = enrollmentConfig.KM_BASE_HOST + enrollmentConfig.content_search
