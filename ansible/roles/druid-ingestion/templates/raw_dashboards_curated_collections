@@ -1,0 +1,192 @@
+{
+  "type": "kafka",
+  "dataSchema": {
+    "dataSource": "dashboards-curated-collections",
+    "parser": {
+      "type": "string",
+      "parseSpec": {
+        "format": "json",
+        "flattenSpec": {
+          "useFieldDiscovery": false,
+          "fields": [
+            {
+              "type": "root",
+              "name": "collection_id",
+              "expr": "$.collectionID"
+            },
+            {
+              "type": "root",
+              "name": "collection_name",
+              "expr": "$.collectionName"
+            },
+            {
+              "type": "root",
+              "name": "collection_category",
+              "expr": "$.collectionCategory"
+            },
+            {
+              "type": "root",
+              "name": "course_id",
+              "expr": "$.courseID"
+            },
+            {
+              "type": "root",
+              "name": "course_name",
+              "expr": "$.courseName"
+            },
+            {
+              "type": "root",
+              "name": "course_status",
+              "expr": "$.courseStatus"
+            },
+            {
+              "type": "root",
+              "name": "course_duration",
+              "expr": "$.courseDuration"
+            },
+            {
+              "type": "root",
+              "name": "course_resource_count",
+              "expr": "$.courseResourceCount"
+            },
+            {
+              "type": "root",
+              "name": "course_org_id",
+              "expr": "$.courseOrgID"
+            },
+            {
+              "type": "root",
+              "name": "course_org_name",
+              "expr": "$.courseOrgName"
+            },
+            {
+              "type": "root",
+              "name": "course_category",
+              "expr": "$.courseCategory"
+            },
+            {
+              "type": "root",
+              "name": "course_review_status",
+              "expr": "$.courseReviewStatus"
+            },
+            {
+              "type": "root",
+              "name": "collection_org_id",
+              "expr": "$.collectionOrgID"
+            },
+            {
+              "type": "root",
+              "name": "collection_org_name",
+              "expr": "$.collectionOrgName"
+            },
+            {
+              "type": "root",
+              "name": "collection_status",
+              "expr": "$.collectionStatus"
+            },
+            {
+              "type": "root",
+              "name": "collection_duration",
+              "expr": "$.collectionDuration"
+            }
+          ]
+        },
+        "dimensionsSpec": {
+          "dimensions": [
+            {
+              "type": "string",
+              "name": "collectionID"
+            },
+            {
+              "type": "string",
+              "name": "collectionName"
+            },
+            {
+              "type": "string",
+              "name": "collectionCategory"
+            },
+            {
+              "type": "string",
+              "name": "courseID"
+            },
+            {
+              "type": "string",
+              "name": "courseName"
+            },
+            {
+              "type": "string",
+              "name": "courseStatus"
+            },
+            {
+              "type": "float",
+              "name": "courseDuration"
+            },
+            {
+              "type": "integer",
+              "name": "courseResourceCount"
+            },
+            {
+              "type": "string",
+              "name": "courseOrgID"
+            },
+            {
+              "type": "string",
+              "name": "courseOrgName"
+            },
+            {
+              "type": "string",
+              "name": "courseCategory"
+            },
+            {
+              "type": "string",
+              "name": "courseReviewStatus"
+            },
+            {
+              "type": "string",
+              "name": "collectionOrgId"
+            },
+            {
+              "type": "string",
+              "name": "collectionOrgName"
+            },
+            {
+              "type": "string",
+              "name": "collectionStatus"
+            },
+            {
+              "type": "string",
+              "name": "collectionDuration"
+            }
+          ],
+          "dimensionsExclusions": []
+        },
+        "timestampSpec": {
+          "column": "timestamp",
+          "format": "auto"
+        }
+      }
+    },
+    "metricsSpec": [],
+    "granularitySpec": {
+      "type": "uniform",
+      "segmentGranularity": "day",
+      "rollup": false
+    }
+  },
+  "ioConfig": {
+    "topic": "{{ env }}.dashboards.curated.collections",
+    "consumerProperties": {
+      "bootstrap.servers": "{{kafka_brokers}}"
+    },
+    "taskCount": "{{raw_dashboards_curated_collections_taskcount}}",
+    "replicas": 1,
+    "taskDuration": "PT7200S",
+    "useEarliestOffset": true,
+    "completionTimeout" : "PT7200S"
+  },
+  "tuningConfig": {
+    "type": "kafka",
+    "reportParseExceptions": false,
+    "maxRowsPerSegment": "2000000"
+  }
+}
