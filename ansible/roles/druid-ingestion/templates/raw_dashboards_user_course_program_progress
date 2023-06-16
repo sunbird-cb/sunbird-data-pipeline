@@ -1,0 +1,256 @@
+{
+  "type": "kafka",
+  "dataSchema": {
+    "dataSource": "dashboards-user-course-program-progress",
+    "parser": {
+      "type": "string",
+      "parseSpec": {
+        "format": "json",
+        "flattenSpec": {
+          "useFieldDiscovery": false,
+          "fields": [
+            {
+              "type": "root",
+              "name": "userID"
+            },
+            {
+              "type": "root",
+              "name": "courseID"
+            },
+            {
+              "type": "root",
+              "name": "batchID"
+            },
+            {
+              "type": "root",
+              "name": "courseCompletedTimestamp"
+            },
+            {
+              "type": "root",
+              "name": "courseEnrolledTimestamp"
+            },
+            {
+              "type": "root",
+              "name": "lastContentAccessTimestamp"
+            },
+            {
+              "type": "root",
+              "name": "courseProgress"
+            },
+            {
+              "type": "root",
+              "name": "dbCompletionStatus"
+            },
+            {
+              "type": "root",
+              "name": "category"
+            },
+            {
+              "type": "root",
+              "name": "courseName"
+            },
+            {
+              "type": "root",
+              "name": "courseStatus"
+            },
+            {
+              "type": "root",
+              "name": "courseReviewStatus"
+            },
+            {
+              "type": "root",
+              "name": "courseDuration"
+            },
+            {
+              "type": "root",
+              "name": "courseResourceCount"
+            },
+            {
+              "type": "root",
+              "name": "courseOrgID"
+            },
+            {
+              "type": "root",
+              "name": "courseOrgName"
+            },
+            {
+              "type": "root",
+              "name": "courseOrgStatus"
+            },
+            {
+              "type": "root",
+              "name": "userOrgID"
+            },
+            {
+              "type": "root",
+              "name": "userOrgName"
+            },
+            {
+              "type": "root",
+              "name": "userOrgStatus"
+            },
+            {
+              "type": "root",
+              "name": "firstName"
+            },
+            {
+              "type": "root",
+              "name": "lastName"
+            },
+            {
+              "type": "root",
+              "name": "maskedEmail"
+            },
+            {
+              "type": "root",
+              "name": "userStatus"
+            },
+            {
+              "type": "root",
+              "name": "completionPercentage"
+            },
+            {
+              "type": "root",
+              "name": "completionStatus"
+            }
+          ]
+        },
+        "dimensionsSpec": {
+          "dimensions": [
+            {
+              "type": "string",
+              "name": "userID"
+            },
+            {
+              "type": "string",
+              "name": "courseID"
+            },
+            {
+              "type": "string",
+              "name": "batchID"
+            },
+            {
+              "type": "long",
+              "name": "courseCompletedTimestamp"
+            },
+            {
+              "type": "long",
+              "name": "courseEnrolledTimestamp"
+            },
+            {
+              "type": "long",
+              "name": "lastContentAccessTimestamp"
+            },
+            {
+              "type": "long",
+              "name": "courseProgress"
+            },
+            {
+              "type": "long",
+              "name": "dbCompletionStatus"
+            },
+            {
+              "type": "string",
+              "name": "category"
+            },
+            {
+              "type": "string",
+              "name": "courseName"
+            },
+            {
+              "type": "string",
+              "name": "courseStatus"
+            },
+            {
+              "type": "string",
+              "name": "courseReviewStatus"
+            },
+            {
+              "type": "float",
+              "name": "courseDuration"
+            },
+            {
+              "type": "long",
+              "name": "courseResourceCount"
+            },
+            {
+              "type": "string",
+              "name": "courseOrgID"
+            },
+            {
+              "type": "string",
+              "name": "courseOrgName"
+            },
+            {
+              "type": "long",
+              "name": "courseOrgStatus"
+            },
+            {
+              "type": "string",
+              "name": "userOrgID"
+            },
+            {
+              "type": "string",
+              "name": "userOrgName"
+            },
+            {
+              "type": "long",
+              "name": "userOrgStatus"
+            },
+            {
+              "type": "string",
+              "name": "firstName"
+            },
+            {
+              "type": "string",
+              "name": "lastName"
+            },
+            {
+              "type": "string",
+              "name": "maskedEmail"
+            },
+            {
+              "type": "long",
+              "name": "userStatus"
+            },
+            {
+              "type": "float",
+              "name": "completionPercentage"
+            },
+            {
+              "type": "string",
+              "name": "completionStatus"
+            }
+          ],
+          "dimensionsExclusions": []
+        },
+        "timestampSpec": {
+          "column": "timestamp",
+          "format": "auto"
+        }
+      }
+    },
+    "metricsSpec": [],
+    "granularitySpec": {
+      "type": "uniform",
+      "segmentGranularity": "day",
+      "rollup": false
+    }
+  },
+  "ioConfig": {
+    "topic": "{{ env }}.dashboards.user.course.program.progress",
+    "consumerProperties": {
+      "bootstrap.servers": "{{kafka_brokers}}"
+    },
+    "taskCount": {{raw_dashboards_user_course_program_progress_taskcount}},
+    "replicas": 1,
+    "taskDuration": "PT7200S",
+    "useEarliestOffset": true,
+    "completionTimeout" : "PT7200S"
+  },
+  "tuningConfig": {
+    "type": "kafka",
+    "reportParseExceptions": false,
+    "maxRowsPerSegment": "2000000"
+  }
+}

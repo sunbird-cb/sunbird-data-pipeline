@@ -18,9 +18,6 @@
     <Root level="error">
       <AppenderRef ref="File" level="error"/>
     </Root>
-  <Root level="info">
-  <AppenderRef ref="Console" level="info"/>
-  </Root>	
   </Loggers>
 </Configuration>
 

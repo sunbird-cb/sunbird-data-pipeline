@@ -1,0 +1,128 @@
+{
+  "type": "kafka",
+  "dataSchema": {
+    "dataSource": "dashboards-user-org",
+    "parser": {
+      "type": "string",
+      "parseSpec": {
+        "format": "json",
+        "flattenSpec": {
+          "useFieldDiscovery": false,
+          "fields": [
+            {
+              "type": "root",
+              "name": "userID"
+            },
+            {
+              "type": "root",
+              "name": "firstName"
+            },
+            {
+              "type": "root",
+              "name": "lastName"
+            },
+            {
+              "type": "root",
+              "name": "maskedEmail"
+            },
+            {
+              "type": "root",
+              "name": "userStatus"
+            },
+            {
+              "type": "root",
+              "name": "userCreatedTimestamp"
+            },
+            {
+              "type": "root",
+              "name": "userUpdatedTimestamp"
+            },
+            {
+              "type": "root",
+              "name": "userOrgID"
+            },
+            {
+              "type": "root",
+              "name": "userOrgName"
+            },
+            {
+              "type": "root",
+              "name": "userOrgStatus"
+            }
+          ]
+        },
+        "dimensionsSpec": {
+          "dimensions": [
+            {
+              "type": "string",
+              "name": "userID"
+            },
+            {
+              "type": "string",
+              "name": "firstName"
+            },
+            {
+              "type": "string",
+              "name": "lastName"
+            },
+            {
+              "type": "string",
+              "name": "maskedEmail"
+            },
+            {
+              "type": "long",
+              "name": "userStatus"
+            },
+            {
+              "type": "long",
+              "name": "userCreatedTimestamp"
+            },
+            {
+              "type": "long",
+              "name": "userUpdatedTimestamp"
+            },
+            {
+              "type": "string",
+              "name": "userOrgID"
+            },
+            {
+              "type": "string",
+              "name": "userOrgName"
+            },
+            {
+              "type": "long",
+              "name": "userOrgStatus"
+            }
+          ],
+          "dimensionsExclusions": []
+        },
+        "timestampSpec": {
+          "column": "timestamp",
+          "format": "auto"
+        }
+      }
+    },
+    "metricsSpec": [],
+    "granularitySpec": {
+      "type": "uniform",
+      "segmentGranularity": "day",
+      "rollup": false
+    }
+  },
+  "ioConfig": {
+    "topic": "{{ env }}.dashboards.user.org",
+    "consumerProperties": {
+      "bootstrap.servers": "{{kafka_brokers}}"
+    },
+    "taskCount": {{raw_dashboards_user_org_taskcount}},
+    "replicas": 1,
+    "taskDuration": "PT7200S",
+    "useEarliestOffset": true,
+    "completionTimeout" : "PT7200S"
+  },
+  "tuningConfig": {
+    "type": "kafka",
+    "reportParseExceptions": false,
+    "maxRowsPerSegment": "2000000"
+  }
+}

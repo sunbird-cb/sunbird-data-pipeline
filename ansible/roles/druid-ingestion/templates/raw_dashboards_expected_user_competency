@@ -1,0 +1,96 @@
+{
+  "type": "kafka",
+  "dataSchema": {
+    "dataSource": "dashboards-expected-user-competency",
+    "parser": {
+      "type": "string",
+      "parseSpec": {
+        "format": "json",
+        "flattenSpec": {
+          "useFieldDiscovery": false,
+          "fields": [
+            {
+              "type": "root",
+              "name": "orgID"
+            },
+            {
+              "type": "root",
+              "name": "workOrderID"
+            },
+            {
+              "type": "root",
+              "name": "userID"
+            },
+            {
+              "type": "root",
+              "name": "competencyID"
+            },
+            {
+              "type": "root",
+              "name": "expectedCompetencyLevel"
+            },
+            {
+              "type": "root",
+              "name": "liveCourseCount"
+            }
+          ]
+        },
+        "dimensionsSpec": {
+          "dimensions": [
+            {
+              "type": "string",
+              "name": "orgID"
+            },
+            {
+              "type": "string",
+              "name": "workOrderID"
+            },
+            {
+              "type": "string",
+              "name": "userID"
+            },
+            {
+              "type": "string",
+              "name": "competencyID"
+            },
+            {
+              "type": "long",
+              "name": "expectedCompetencyLevel"
+            },
+            {
+              "type": "long",
+              "name": "liveCourseCount"
+            }
+          ],
+          "dimensionsExclusions": []
+        },
+        "timestampSpec": {
+          "column": "timestamp",
+          "format": "auto"
+        }
+      }
+    },
+    "metricsSpec": [],
+    "granularitySpec": {
+      "type": "uniform",
+      "segmentGranularity": "day",
+      "rollup": false
+    }
+  },
+  "ioConfig": {
+    "topic": "{{ env }}.dashboards.competency.expected",
+    "consumerProperties": {
+      "bootstrap.servers": "{{kafka_brokers}}"
+    },
+    "taskCount": {{raw_dashboards_expected_user_competency_taskcount}},
+    "replicas": 1,
+    "taskDuration": "PT7200S",
+    "useEarliestOffset": true,
+    "completionTimeout" : "PT7200S"
+  },
+  "tuningConfig": {
+    "type": "kafka",
+    "reportParseExceptions": false,
+    "maxRowsPerSegment": "2000000"
+  }
+}
