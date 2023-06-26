@@ -1,0 +1,96 @@
+{
+  "type": "kafka",
+  "dataSchema": {
+    "dataSource": "dashboards-frac-competency",
+    "parser": {
+      "type": "string",
+      "parseSpec": {
+        "format": "json",
+        "flattenSpec": {
+          "useFieldDiscovery": false,
+          "fields": [
+            {
+              "type": "root",
+              "name": "competencyID"
+            },
+            {
+              "type": "root",
+              "name": "competencyName"
+            },
+            {
+              "type": "root",
+              "name": "competencyStatus"
+            },
+            {
+              "type": "root",
+              "name": "liveCourseCount"
+            },
+            {
+              "type": "root",
+              "name": "officerCountExpected"
+            },
+            {
+              "type": "root",
+              "name": "officerCountDeclared"
+            }
+          ]
+        },
+        "dimensionsSpec": {
+          "dimensions": [
+            {
+              "type": "string",
+              "name": "competencyID"
+            },
+            {
+              "type": "string",
+              "name": "competencyName"
+            },
+            {
+              "type": "string",
+              "name": "competencyStatus"
+            },
+            {
+              "type": "long",
+              "name": "liveCourseCount"
+            },
+            {
+              "type": "long",
+              "name": "officerCountExpected"
+            },
+            {
+              "type": "long",
+              "name": "officerCountDeclared"
+            }
+          ],
+          "dimensionsExclusions": []
+        },
+        "timestampSpec": {
+          "column": "timestamp",
+          "format": "auto"
+        }
+      }
+    },
+    "metricsSpec": [],
+    "granularitySpec": {
+      "type": "uniform",
+      "segmentGranularity": "day",
+      "rollup": false
+    }
+  },
+  "ioConfig": {
+    "topic": "{{ env }}.dashboards.competency.frac",
+    "consumerProperties": {
+      "bootstrap.servers": "{{kafka_brokers}}"
+    },
+    "taskCount": {{raw_dashboards_frac_competency_taskcount}},
+    "replicas": 1,
+    "taskDuration": "PT7200S",
+    "useEarliestOffset": true,
+    "completionTimeout" : "PT7200S"
+  },
+  "tuningConfig": {
+    "type": "kafka",
+    "reportParseExceptions": false,
+    "maxRowsPerSegment": "2000000"
+  }
+}

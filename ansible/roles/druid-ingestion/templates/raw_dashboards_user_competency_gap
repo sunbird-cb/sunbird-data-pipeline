@@ -1,0 +1,120 @@
+{
+  "type": "kafka",
+  "dataSchema": {
+    "dataSource": "dashboards-user-competency-gap",
+    "parser": {
+      "type": "string",
+      "parseSpec": {
+        "format": "json",
+        "flattenSpec": {
+          "useFieldDiscovery": false,
+          "fields": [
+            {
+              "type": "root",
+              "name": "userID"
+            },
+            {
+              "type": "root",
+              "name": "competencyID"
+            },
+            {
+              "type": "root",
+              "name": "orgID"
+            },
+            {
+              "type": "root",
+              "name": "workOrderID"
+            },
+            {
+              "type": "root",
+              "name": "expectedCompetencyLevel"
+            },
+            {
+              "type": "root",
+              "name": "declaredCompetencyLevel"
+            },
+            {
+              "type": "root",
+              "name": "competencyGap"
+            },
+            {
+              "type": "root",
+              "name": "completionPercentage"
+            },
+            {
+              "type": "root",
+              "name": "completionStatus"
+            }
+          ]
+        },
+        "dimensionsSpec": {
+          "dimensions": [
+            {
+              "type": "string",
+              "name": "userID"
+            },
+            {
+              "type": "string",
+              "name": "competencyID"
+            },
+            {
+              "type": "string",
+              "name": "orgID"
+            },
+            {
+              "type": "string",
+              "name": "workOrderID"
+            },
+            {
+              "type": "long",
+              "name": "expectedCompetencyLevel"
+            },
+            {
+              "type": "long",
+              "name": "declaredCompetencyLevel"
+            },
+            {
+              "type": "long",
+              "name": "competencyGap"
+            },
+            {
+              "type": "float",
+              "name": "completionPercentage"
+            },
+            {
+              "type": "string",
+              "name": "completionStatus"
+            }
+          ],
+          "dimensionsExclusions": []
+        },
+        "timestampSpec": {
+          "column": "timestamp",
+          "format": "auto"
+        }
+      }
+    },
+    "metricsSpec": [],
+    "granularitySpec": {
+      "type": "uniform",
+      "segmentGranularity": "day",
+      "rollup": false
+    }
+  },
+  "ioConfig": {
+    "topic": "{{ env }}.dashboards.competency.gap",
+    "consumerProperties": {
+      "bootstrap.servers": "{{kafka_brokers}}"
+    },
+    "taskCount": {{raw_dashboards_user_competency_gap_taskcount}},
+    "replicas": 1,
+    "taskDuration": "PT7200S",
+    "useEarliestOffset": true,
+    "completionTimeout" : "PT7200S"
+  },
+  "tuningConfig": {
+    "type": "kafka",
+    "reportParseExceptions": false,
+    "maxRowsPerSegment": "2000000"
+  }
+}

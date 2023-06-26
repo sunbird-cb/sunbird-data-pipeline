@@ -1,0 +1,192 @@
+{
+  "type": "kafka",
+  "dataSchema": {
+    "dataSource": "dashboards-course",
+    "parser": {
+      "type": "string",
+      "parseSpec": {
+        "format": "json",
+        "flattenSpec": {
+          "useFieldDiscovery": false,
+          "fields": [
+            {
+              "type": "root",
+              "name": "courseID"
+            },
+            {
+              "type": "root",
+              "name": "category"
+            },
+            {
+              "type": "root",
+              "name": "courseName"
+            },
+            {
+              "type": "root",
+              "name": "courseStatus"
+            },
+            {
+              "type": "root",
+              "name": "courseReviewStatus"
+            },
+            {
+              "type": "root",
+              "name": "courseOrgID"
+            },
+            {
+              "type": "root",
+              "name": "courseOrgName"
+            },
+            {
+              "type": "root",
+              "name": "courseOrgStatus"
+            },
+            {
+              "type": "root",
+              "name": "courseDuration"
+            },
+            {
+              "type": "root",
+              "name": "courseResourceCount"
+            },
+            {
+              "type": "root",
+              "name": "ratingSum"
+            },
+            {
+              "type": "root",
+              "name": "ratingCount"
+            },
+            {
+              "type": "root",
+              "name": "ratingAverage"
+            },
+            {
+              "type": "root",
+              "name": "count1Star"
+            },
+            {
+              "type": "root",
+              "name": "count2Star"
+            },
+            {
+              "type": "root",
+              "name": "count3Star"
+            },
+            {
+              "type": "root",
+              "name": "count4Star"
+            },
+            {
+              "type": "root",
+              "name": "count5Star"
+            }
+          ]
+        },
+        "dimensionsSpec": {
+          "dimensions": [
+            {
+              "type": "string",
+              "name": "courseID"
+            },
+            {
+              "type": "string",
+              "name": "category"
+            },
+            {
+              "type": "string",
+              "name": "courseName"
+            },
+            {
+              "type": "string",
+              "name": "courseStatus"
+            },
+            {
+              "type": "string",
+              "name": "courseReviewStatus"
+            },
+            {
+              "type": "string",
+              "name": "courseOrgID"
+            },
+            {
+              "type": "string",
+              "name": "courseOrgName"
+            },
+            {
+              "type": "long",
+              "name": "courseOrgStatus"
+            },
+            {
+              "type": "float",
+              "name": "courseDuration"
+            },
+            {
+              "type": "long",
+              "name": "courseResourceCount"
+            },
+            {
+              "type": "float",
+              "name": "ratingSum"
+            },
+            {
+              "type": "float",
+              "name": "ratingCount"
+            },
+            {
+              "type": "float",
+              "name": "ratingAverage"
+            },
+            {
+              "type": "float",
+              "name": "count1Star"
+            },
+            {
+              "type": "float",
+              "name": "count2Star"
+            },
+            {
+              "type": "float",
+              "name": "count3Star"
+            },
+            {
+              "type": "float",
+              "name": "count4Star"
+            },
+            {
+              "type": "float",
+              "name": "count5Star"
+            }
+          ],
+          "dimensionsExclusions": []
+        },
+        "timestampSpec": {
+          "column": "timestamp",
+          "format": "auto"
+        }
+      }
+    },
+    "metricsSpec": [],
+    "granularitySpec": {
+      "type": "uniform",
+      "segmentGranularity": "day",
+      "rollup": false
+    }
+  },
+  "ioConfig": {
+    "topic": "{{ env }}.dashboards.course",
+    "consumerProperties": {
+      "bootstrap.servers": "{{kafka_brokers}}"
+    },
+    "taskCount": {{raw_dashboards_course_taskcount}},
+    "replicas": 1,
+    "taskDuration": "PT7200S",
+    "useEarliestOffset": true,
+    "completionTimeout" : "PT7200S"
+  },
+  "tuningConfig": {
+    "type": "kafka",
+    "reportParseExceptions": false,
+    "maxRowsPerSegment": "2000000"
+  }
+}
