@@ -168,14 +168,12 @@
               "name": "collection_duration"
             },
             {
-              "type": "root",
-              "name": "collection_org_status",
-              "expr": "$.collection_org_status"
+              "type": "integer",
+              "name": "collection_org_status"
             },
             {
-              "type": "root",
-              "name": "course_org_status",
-              "expr": "$.course_org_status"
+              "type": "integer",
+              "name": "course_org_status"
             }
           ],
           "dimensionsExclusions": []
