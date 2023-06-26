@@ -81,13 +81,23 @@
             },
             {
               "type": "root",
-              "name": "collection_status",
+              "name": "collection_status",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
               "expr": "$.collection_status"
             },
             {
               "type": "root",
               "name": "collection_duration",
               "expr": "$.collection_duration"
+            },
+            {
+              "type": "root",
+              "name": "collection_org_status",
+              "expr": "$.collection_org_status"
+            },
+            {
+              "type": "root",
+              "name": "course_org_status",
+              "expr": "$.course_org_status"
             }
           ]
         },
@@ -156,6 +166,16 @@
             {
               "type": "string",
               "name": "collection_duration"
+            },
+            {
+              "type": "root",
+              "name": "collection_org_status",
+              "expr": "$.collection_org_status"
+            },
+            {
+              "type": "root",
+              "name": "course_org_status",
+              "expr": "$.course_org_status"
             }
           ],
           "dimensionsExclusions": []
