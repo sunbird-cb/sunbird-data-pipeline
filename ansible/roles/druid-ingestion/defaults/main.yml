@@ -29,7 +29,6 @@ raw_dashboards_declared_user_competency_taskcount: 1
 raw_dashboards_expected_user_competency_taskcount: 1
 raw_dashboards_frac_competency_taskcount: 1
 raw_dashboards_user_competency_gap_taskcount: 1
-raw_dashboards_curated_collections_taskcount: 1
 raw_telemetry_feedback_events_taskcount: 1
 rollup_error_hourly_syncts_taskcount: 1
 rollup_summary_distinct_counts_taskcount: 1
