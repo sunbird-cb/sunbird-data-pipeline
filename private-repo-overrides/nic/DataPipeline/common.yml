@@ -1,0 +1,49 @@
+# Add these to private repo
+# IMPORTANT: replace any settings that are already present before adding
+
+# configure storage container
+cephs3_storage_container: "igot"
+cephs3_dp_storage_container: "igot"
+
+# configure ceph s3 private storage credentials
+sunbird_private_s3_storage_key: "{{ cephs3_storage_key }}"
+sunbird_private_s3_storage_secret: "{{ cephs3_storage_secret }}"
+
+# configure s3
+s3_storage_endpoint: "{{ cephs3_storage_endpoint }}"
+s3_request_signature_version: AWS4-HMAC-SHA256
+s3_path_style_access: true
+s3_https_only: false
+s3_default_bucket_location: "us-east-1"
+s3_storage_container: "{{ cephs3_storage_container }}"
+s3_dp_storage_container: "{{ cephs3_dp_storage_container }}"
+
+# configure default org id
+default_org_id: "<get id from cassandra db>"
+frac_org_id: "<get id from cassandra db>"
+
+# configure kafka brokers and zookeepers
+kafka_brokers: "{{groups['processing-cluster-kafka']|join(':9092,')}}:9092"
+zookeepers: "{{groups['processing-cluster-zookeepers']|join(':2181,')}}:2181"
+ingestion_kafka_brokers: "{{groups['ingestion-cluster-kafka']|join(':9092,')}}:9092"
+ingestion_zookeepers: "{{groups['ingestion-cluster-zookeepers']|join(':2181,')}}:2181"
+
+# configure redis ports
+content_port: 6379
+device_port: 6379
+user_port: 6379
+dialcode_port: 6379
+
+# configure data-products
+bucket: "igot"
+secor_bucket: "igot"
+dp_object_store_type: "cephs3"
+dp_raw_telemetry_backup_location: "secor-{{ env }}/unique/raw/"
+dp_storage_key_config: "s3_storage_key"
+dp_storage_secret_config: "s3_storage_secret"
+dp_reports_storage_key_config: "s3_storage_key"
+dp_reports_storage_secret_config: "s3_storage_secret"
+
+# dashboard related config
+dashboards_frac_backend_host: "frac-dictionary-backend.igot-{{ env }}.in"
+dashboards_broker_compression: "none"

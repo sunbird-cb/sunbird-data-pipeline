@@ -1,0 +1,8 @@
+[ingestion-cluster-zookeepers]
+192.168.3.249
+[processing-cluster-zookeepers]
+192.168.3.249
+[ingestion-cluster-kafka]
+192.168.3.249
+[processing-cluster-kafka]
+192.168.3.249
