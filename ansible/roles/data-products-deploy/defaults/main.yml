@@ -2,6 +2,7 @@ analytics_user: analytics
 analytics_group: analytics
 spark_output_temp_dir: /mount/data/analytics/tmp/
 
+report_store: "s3"
 bucket: "telemetry-data-store"
 secor_bucket: "dev-data-store"
 dp_object_store_type: "azure"
