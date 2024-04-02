@@ -68,7 +68,7 @@ dw_postgres_credential: "Password@12345678"
 
 
 mongo_node_bb_host: "{{groups['mongodb-nodebb'][0]}}"
-ml_mongo_host: "{{groups['mongodb-host'][0]}}"
+ml_mongo_host: "{{groups['ml-mongodb-host'][0]}}"
 dashboards_mongo_discussions_db: "nodebb"
 dashboards_mongo_discussions_db_collection: "objects"
 dashboards_mongo_survey_observation_db: "ml-survey"
