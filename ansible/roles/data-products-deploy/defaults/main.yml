@@ -65,7 +65,7 @@ dashboards_cassandra_karma_points_summary_table: "user_karma_points_summary"
 
 app_postgres_host: "{{groups['app-postgres'][0]}}:5432"
 dw_postgres_host: "{{groups['dw-postgres'][0]}}:5432"
-dw_postgres_credential: "{{dp_vault_pgdb_password}}"
+dw_postgres_credential: "Password@12345678"
 
 
 mongo_node_bb_host: "{{groups['mongodb-nodebb'][0]}}"
