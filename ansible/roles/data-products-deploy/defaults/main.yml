@@ -227,12 +227,12 @@ run_cba_report_job:
   course-based-assessment-report:
     hour: 04
     minute: 00
-run_blended_program_report_job:
-  blended-program-report:
-    hour: 04
-    minute: 30
 run_kcm_report_job:
   kcm-report:
+    hour: 04
+    minute: 45
+run_blended_program_report_job:
+  blended-program-report:
     hour: 05
     minute: 00
 run_wfs_job:
