@@ -145,7 +145,9 @@ directories_to_select: "blended-program-report-mdo,cbp-report-mdo-summary,course
 
 analytics_job_list: '"wfs", "dashboard-sync", "assessment-metrics", "monitor-job-summ", "user-report-job", "survey-nps"'
 analytics_jobs_count: 6
-operational_report_sync_enable: true
+operational_report_sync_enable: false
+# disable once user enrolment report is external integration is complete
+operational_user_enrolment_report_sync_enable: true
 
 cassandra_keyspace_prefix: '{{ env }}_'
 report_cassandra_cluster_host: "{{ report_cassandra_host | default(core_cassandra_host) }}"
