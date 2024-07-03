@@ -148,6 +148,8 @@ analytics_jobs_count: 6
 operational_report_sync_enable: false
 # disable once user enrolment report is external integration is complete
 operational_user_enrolment_report_sync_enable: true
+# sync report will always be enable for zip upload
+operational_zip_upload_report_sync_enable: true
 
 cassandra_keyspace_prefix: '{{ env }}_'
 report_cassandra_cluster_host: "{{ report_cassandra_host | default(core_cassandra_host) }}"
