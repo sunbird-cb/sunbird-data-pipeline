@@ -147,7 +147,7 @@ analytics_job_list: '"wfs", "dashboard-sync", "assessment-metrics", "monitor-job
 analytics_jobs_count: 6
 operational_report_sync_enable: false
 # disable once user enrolment report is external integration is complete
-operational_user_enrolment_report_sync_enable: true
+operational_user_enrolment_report_sync_enable: false
 # sync report will always be enable for zip upload
 operational_zip_upload_report_sync_enable: true
 
