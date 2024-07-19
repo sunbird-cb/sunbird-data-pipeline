@@ -3,7 +3,7 @@
   hosts: "druid-{{remote}}"
   become: yes
   roles:
-    - {role: jdk-1.8.0_121, when: "'java' in deploy"}
+    - {role: openjdk, when: "'java' in deploy"}
 
 -
   name: Install java and zookeeper cluster for druid

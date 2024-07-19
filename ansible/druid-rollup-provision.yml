@@ -2,8 +2,8 @@
   name: Install Java
   hosts: druid-rollup
   become: yes
-  roles: 
-    - jdk-1.8.0_121
+  roles:
+    - openjdk
 
 -
   name: Install java and zookeeper cluster for druid
@@ -30,7 +30,7 @@
 #    postgresql_users:
 #      - name: druid
 #        password: "{{ dp_vault_druid_postgress_pass }}"
-#      - name: graphite 
+#      - name: graphite
 #        password: "{{ dp_vault_druid_postgress_graphite_pass }}"
 
 
@@ -50,7 +50,7 @@
         password: "{{ dp_vault_druid_postgress_pass }}"
       - name: graphite
         db: graphite-rollup
-        password: "{{ dp_vault_druid_postgress_graphite_pass }}"     
+        password: "{{ dp_vault_druid_postgress_graphite_pass }}"
   tasks:
     - name: Ensure database is created
       postgresql_db: name="{{ item.name }}" \
@@ -75,7 +75,7 @@
                   db="{{ item.db }}"
       with_items: "{{ postgresql_users }}"
 
-- 
+-
   name : Install graphite on druid
   hosts: druid-rollup-graphite
   become: yes

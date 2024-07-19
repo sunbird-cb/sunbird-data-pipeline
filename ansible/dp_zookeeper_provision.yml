@@ -6,7 +6,7 @@
   #     ignore_errors: true
   become: yes
   roles:
-    - jdk-1.8.0_121
+    - openjdk
     - zookeeper-upgrade
   # post_tasks:
   #   - service: name=monit state=started

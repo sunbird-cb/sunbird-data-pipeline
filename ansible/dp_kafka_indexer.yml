@@ -10,7 +10,7 @@
       become: yes
       tags: kafka-indexer
   roles:
-    - jdk-1.8.0_121
+    - openjdk
     - ep_logstash
   tags:
     - kafka-indexer

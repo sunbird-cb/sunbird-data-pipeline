@@ -1,0 +1,5 @@
+- name: installing repo for open jdk in Ubuntu
+  apt_repository: repo='ppa:openjdk-r/ppa'
+
+- name: ensure openjdk 8 is present
+  apt: name='openjdk-8-jdk-headless' state=present
