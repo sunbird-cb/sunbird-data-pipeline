@@ -62,6 +62,7 @@ dashboards_cassandra_learner_leaderboard_table: "learner_leaderboard"
 dashboards_cassandra_user_feed_table: "notification_feed"
 dashboards_cassandra_user_feed_keyspace: "sunbird_notifications"
 dashboards_cassandra_karma_points_summary_table: "user_karma_points_summary"
+dashboards_cassandra_mdo_learner_leaderboard_table: "mdo_top_learners"
 
 app_postgres_host: "{{groups['app-postgres'][0]}}:5432"
 dw_postgres_host: "{{groups['dw-postgres'][0]}}:5432"
@@ -210,7 +211,7 @@ run_dashboard_sync_job:
 run_assessment_metrics_job:
   assessment-metrics:
     hour: 01
-    minute: 00
+    minute: 05
 run_course_report_job:
   course-report:
     hour: 01
@@ -218,27 +219,31 @@ run_course_report_job:
 run_acbp_report_job:
   acbp-report:
     hour: 01
-    minute: 30
+    minute: 25
 run_user_report_job:
   user-report:
-    hour: 02
-    minute: 00
+    hour: 01
+    minute: 45
 run_user_enrolment_report_job:
   user-enrolment-report:
     hour: 02
-    minute: 45
+    minute: 00
 run_cba_report_job:
   course-based-assessment-report:
-    hour: 04
+    hour: 03
     minute: 00
+run_blended_program_report_job:
+  blended-program-report:
+    hour: 03
+    minute: 30
 run_kcm_report_job:
   kcm-report:
     hour: 04
-    minute: 45
-run_blended_program_report_job:
-  blended-program-report:
-    hour: 05
     minute: 00
+run_ministry_metrics_job:
+  ministry-metrics:
+    hour : 04
+    minute: 05
 run_wfs_job:
   wfs:
     hour: 05
@@ -276,6 +281,11 @@ run_learner_leaderboard_job:
     day: 01
     hour: 09
     minute: 45
+run_ministry_learner_leaderboard_job:
+  ministry-learner-leaderboard:
+    day: 01
+    hour: 12
+    minute: 30
 run_survey_question_report_job:
   survey-question-report:
     hour: 11

@@ -206,6 +206,20 @@
     - spark1-jobs
     - default-jobs
 
+- name: Create daily cron jobs for ministry-metrics
+  cron: name="{{env}}-{{ item.key }}" minute={{ item.value.minute }} hour={{ item.value.hour }}  job="{{ analytics.home }}/scripts/run-job.sh ministry-metrics"
+  with_dict: "{{ run_ministry_metrics_job }}"
+  tags:
+    - spark1-jobs
+    - default-jobs
+
+- name: Create daily cron jobs for ministry-learner-leaderboard
+  cron: name="{{env}}-{{ item.key }}" minute={{ item.value.minute }} hour={{ item.value.hour }}  job="{{ analytics.home }}/scripts/run-job.sh ministry-learner-leaderboard"
+  with_dict: "{{ run_ministry_learner_leaderboard_job }}"
+  tags:
+    - spark1-jobs
+    - default-jobs
+
 - name: Create daily cron jobs for wfs
   cron: name="{{env}}-{{ item.key }}" minute={{ item.value.minute }} hour={{ item.value.hour }}  job="{{ analytics.home }}/scripts/run-job.sh wfs"
   with_dict: "{{ run_wfs_job }}"
