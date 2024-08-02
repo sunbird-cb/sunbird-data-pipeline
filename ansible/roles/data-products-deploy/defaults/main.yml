@@ -105,7 +105,7 @@ ml_report_path: "standalone-reports/ml-report"
 
 report_solution_ids: ""
 report_grace_period: "2"
-report_base_url_for_evidences: "{{ report_base_url_for_evidences }}"
+report_base_url_for_evidences: "https://{{ domain_name }}/content-store/"
 report_include_expired_solution_ids: true
 survey_question_report_batch_size: "{{ survey_question_report_batch_size }}"
 survey_status_report_batch_size: "{{ survey_status_report_batch_size }}"
