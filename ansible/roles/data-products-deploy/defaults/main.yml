@@ -274,8 +274,8 @@ run_zip_upload_job:
     minute: 30
 run_comms_console_job:
   comms-console:
-    hour: 09
-    minute: 30
+    hour: 10
+    minute: 00
 run_learner_leaderboard_job:
   learner-leaderboard:
     day: 01
